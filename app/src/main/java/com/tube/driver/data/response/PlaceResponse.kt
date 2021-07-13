@@ -4,6 +4,8 @@ package com.tube.driver.data.response
 import com.google.gson.annotations.SerializedName
 
 data class PlaceResponse(
+    @SerializedName("id")
+    val id: String,
     @SerializedName("place_name")
     val placeName: String?,
     @SerializedName("distance")
@@ -16,8 +18,6 @@ data class PlaceResponse(
     val addressName: String?,
     @SerializedName("road_address_name")
     val roadAddressName: String?,
-    @SerializedName("id")
-    val id: String?,
     @SerializedName("phone")
     val phone: String?,
     @SerializedName("category_group_code")

@@ -12,7 +12,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
-
 @AndroidEntryPoint
 class MapActivity : AppCompatActivity(),
     MapView.CurrentLocationEventListener {
@@ -24,6 +23,8 @@ class MapActivity : AppCompatActivity(),
         get() = binding.mapViewContainer
 
     private var latestCurrentMapPoint: MapPoint.GeoCoordinate? = null
+
+    private lateinit var placeAdapter: PlaceAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +48,8 @@ class MapActivity : AppCompatActivity(),
                     viewModel.search(mapPoint.latitude, mapPoint.longitude)
                 }
             }
+
+            placeListView.adapter = placeAdapter
 
             BottomSheetBehavior.from(bottomSheet)
                 .addBottomSheetCallback(createBottomSheetCallback(bottomSheetState))
@@ -100,8 +103,6 @@ class MapActivity : AppCompatActivity(),
     override fun onCurrentLocationUpdateCancelled(p0: MapView?) {
 
     }
-
-
 
 
     private fun createBottomSheetCallback(text: TextView): BottomSheetBehavior.BottomSheetCallback =

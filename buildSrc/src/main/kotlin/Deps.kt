@@ -26,6 +26,7 @@ object Deps {
     object Network {
         const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofitVersion}"
         const val gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofitVersion}"
+        const val rxAdapter = "com.squareup.retrofit2:adapter-rxjava3:${Versions.rxAdapterVersion}"
     }
 
     const val glide = "com.github.bumptech.glide:glide:${Versions.glideVersion}"

@@ -64,6 +64,7 @@ dependencies {
 
     implementation(Deps.Network.retrofit)
     implementation(Deps.Network.gson)
+    implementation(Deps.Network.rxAdapter)
 
     implementation(Deps.Hilt.hilt)
     kapt(Deps.Hilt.hiltCompiler)

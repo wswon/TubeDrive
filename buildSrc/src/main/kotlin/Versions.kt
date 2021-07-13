@@ -29,7 +29,7 @@ object Versions {
 
     const val rxAndroidVersion = "3.0.0"
     const val rxJavaVersion = "3.0.11"
-
+    const val rxAdapterVersion = "2.9.0"
     const val retrofitVersion = "2.6.2"
 
     const val hiltVersion = "2.37"

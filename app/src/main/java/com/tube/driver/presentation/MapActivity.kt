@@ -20,14 +20,35 @@ class MapActivity : AppCompatActivity(),
     private val mapView: MapView
         get() = binding.mapViewContainer
 
+    private var latestCurrentMapPoint: MapPoint.GeoCoordinate? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mapView.setCurrentLocationEventListener(this)
-        mapView.currentLocationTrackingMode =
-            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+        setupView()
+        setupViewModel()
+    }
+
+    private fun setupView() {
+        with(binding) {
+            mapView.run {
+                setCurrentLocationEventListener(this@MapActivity)
+                currentLocationTrackingMode =
+                    MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+            }
+
+            refreshButton.setOnClickListener {
+                latestCurrentMapPoint?.let { mapPoint ->
+                    viewModel.search(mapPoint.latitude, mapPoint.longitude)
+                }
+            }
+        }
+    }
+
+    private fun setupViewModel() {
+
     }
 
     override fun onDestroy() {
@@ -35,7 +56,6 @@ class MapActivity : AppCompatActivity(),
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
         mapView.setShowCurrentLocationMarker(false)
     }
-
 
     private var flag = false
 
@@ -45,6 +65,8 @@ class MapActivity : AppCompatActivity(),
         accuracyInMeters: Float
     ) {
         currentLocation?.mapPointGeoCoord?.let { mapPointGeo ->
+            latestCurrentMapPoint = mapPointGeo
+
             DLog.d(
                 String.format(
                     "MapView onCurrentLocationUpdate (%f,%f) accuracy (%f)",

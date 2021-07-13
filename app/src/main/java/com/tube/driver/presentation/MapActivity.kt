@@ -1,8 +1,11 @@
 package com.tube.driver.presentation
 
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tube.driver.DLog
 import com.tube.driver.databinding.ActivityMapBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,6 +47,9 @@ class MapActivity : AppCompatActivity(),
                     viewModel.search(mapPoint.latitude, mapPoint.longitude)
                 }
             }
+
+            BottomSheetBehavior.from(bottomSheet)
+                .addBottomSheetCallback(createBottomSheetCallback(bottomSheetState))
         }
     }
 
@@ -94,5 +100,35 @@ class MapActivity : AppCompatActivity(),
     override fun onCurrentLocationUpdateCancelled(p0: MapView?) {
 
     }
+
+
+
+
+    private fun createBottomSheetCallback(text: TextView): BottomSheetBehavior.BottomSheetCallback =
+        object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                text.text = when (newState) {
+                    BottomSheetBehavior.STATE_DRAGGING -> "STATE DRAGGING"
+                    BottomSheetBehavior.STATE_EXPANDED -> "STATE EXPANDED"
+                    BottomSheetBehavior.STATE_COLLAPSED -> "STATE COLLAPSED"
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        String.format(
+                            "STATE_HALF_EXPANDED\\nhalfExpandedRatio = %.2f",
+                            BottomSheetBehavior.from(bottomSheet).halfExpandedRatio
+                        )
+                    }
+                    else -> {
+                        text.text.toString()
+                    }
+                }
+            }
+
+            override fun onSlide(
+                bottomSheet: View,
+                slideOffset: Float
+            ) {
+            }
+        }
 }
 

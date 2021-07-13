@@ -24,7 +24,16 @@ class MapActivity : AppCompatActivity(),
 
     private var latestCurrentMapPoint: MapPoint.GeoCoordinate? = null
 
-    private lateinit var placeAdapter: PlaceAdapter
+    private val placeAdapter: PlaceAdapter by lazy {
+        PlaceAdapter(
+            clickPlaceItem = {
+
+            },
+            clickLoadMore = {
+
+            }
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +59,18 @@ class MapActivity : AppCompatActivity(),
             }
 
             placeListView.adapter = placeAdapter
+
+            placeAdapter.submitList(
+                listOf(
+                    PlaceItem.Item("", "", "", "", "", "", ""),
+                    PlaceItem.Item("", "", "", "", "", "", ""),
+                    PlaceItem.Item("", "", "", "", "", "", ""),
+                    PlaceItem.Item("", "", "", "", "", "", ""),
+                    PlaceItem.Item("", "", "", "", "", "", ""),
+                    PlaceItem.Item("", "", "", "", "", "", ""),
+                    PlaceItem.LoadMoreFooter
+                )
+            )
 
             BottomSheetBehavior.from(bottomSheet)
                 .addBottomSheetCallback(createBottomSheetCallback(bottomSheetState))

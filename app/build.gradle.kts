@@ -1,9 +1,10 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("com.google.firebase.crashlytics")
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("com.google.firebase.crashlytics")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -63,6 +64,9 @@ dependencies {
 
     implementation(Deps.Network.retrofit)
     implementation(Deps.Network.gson)
+
+    implementation(Deps.Hilt.hilt)
+    kapt(Deps.Hilt.hiltCompiler)
 
     testImplementation(Deps.Test.archCore)
     testImplementation(Deps.Test.mockk)

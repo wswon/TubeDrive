@@ -31,4 +31,6 @@ object Versions {
     const val rxJavaVersion = "3.0.11"
 
     const val retrofitVersion = "2.6.2"
+
+    const val hiltVersion = "2.35"
 }

@@ -1,4 +1,4 @@
-package com.tube.driver
+package com.tube.driver.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -34,4 +34,9 @@ object Deps {
         const val archCore = "androidx.arch.core:core-testing:${Versions.Test.coreTestingVersion}"
         const val mockk = "io.mockk:mockk:${Versions.Test.mockkVersion}"
     }
+
+    object Hilt {
+        const val hilt = "com.google.dagger:hilt-android:${Versions.hiltVersion}"
+        const val hiltCompiler = "com.google.dagger:hilt-android-compiler:${Versions.hiltVersion}"
+    }
 }

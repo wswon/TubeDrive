@@ -17,7 +17,7 @@ object Versions {
         const val mockkVersion = "1.10.6"
     }
 
-    const val kotlinVersion = "1.5.20"
+    const val kotlinVersion = "1.5.21"
     const val materialVersion = "1.3.0"
     const val activityVersion = "1.2.2"
     const val fragmentVersion = "1.3.2"
@@ -32,5 +32,5 @@ object Versions {
 
     const val retrofitVersion = "2.6.2"
 
-    const val hiltVersion = "2.35"
+    const val hiltVersion = "2.37"
 }

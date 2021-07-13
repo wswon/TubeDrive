@@ -3,74 +3,74 @@ package com.tube.driver
 import android.util.Log
 
 object DLog {
-    var lineNumber = 0
-    var className: String? = null
-    var methodName: String? = null
-    private val isDebuggable: Boolean
-        get() = BuildConfig.DEBUG
+    private data class LogInfo(val lineNumber: Int, val className: String, val methodName: String)
 
-    private fun log(mode: Int, className: String?, msg: String) {
-        if (isDebuggable) return
+    @JvmStatic
+    fun isDebuggable(): Boolean {
+        return BuildConfig.DEBUG
     }
 
-    private fun createLog(log: String): String {
-        val buffer = StringBuffer()
-        buffer.append("[")
-        buffer.append(methodName)
-        buffer.append("():")
-        buffer.append(lineNumber)
-        buffer.append("]")
-        buffer.append(log)
-        return buffer.toString()
+    @JvmStatic
+    fun logException(e: Throwable) {
+        if (isDebuggable()) {
+            e.printStackTrace()
+        }
     }
 
-    private fun getMethodNames(sElements: Array<StackTraceElement>) {
-        className = sElements[1].fileName.replace(".java".toRegex(), "")
-        methodName = sElements[1].methodName
-        lineNumber = sElements[1].lineNumber
+    private fun createLog(logInfo: LogInfo, log: String?): String {
+        return "[${logInfo.methodName}():${logInfo.lineNumber}]$log"
     }
 
-    fun e(message: String) {
-        if (!isDebuggable) return
-
-        // Throwable instance must be created before any methods
-        getMethodNames(Throwable().stackTrace)
-        Log.e(className, createLog(message))
-        log(Log.ERROR, className, createLog(message))
+    private fun getLogInfo(sElements: Array<StackTraceElement>): LogInfo {
+        return LogInfo(
+            sElements[1].lineNumber,
+            when {
+                sElements[1].fileName.endsWith(".java") -> sElements[1].fileName.replace(
+                    ".java".toRegex(),
+                    ""
+                )
+                sElements[1].fileName.endsWith(".kt") -> sElements[1].fileName.replace(
+                    ".kt".toRegex(),
+                    ""
+                )
+                else -> sElements[1].fileName
+            },
+            sElements[1].methodName
+        )
     }
 
-    fun i(message: String) {
-        if (!isDebuggable) return
-        getMethodNames(Throwable().stackTrace)
-        Log.i(className, createLog(message))
-        log(Log.INFO, className, createLog(message))
+    @JvmStatic
+    fun e(message: String?) {
+        if (!isDebuggable()) return
+        val logInfo = getLogInfo(Throwable().stackTrace)
+        Log.e(logInfo.className, createLog(logInfo, message))
     }
 
-    fun d(message: String) {
-        if (!isDebuggable) return
-        getMethodNames(Throwable().stackTrace)
-        Log.d(className, createLog(message))
-        log(Log.DEBUG, className, createLog(message))
+    @JvmStatic
+    fun i(message: String?) {
+        if (!isDebuggable()) return
+        val logInfo = getLogInfo(Throwable().stackTrace)
+        Log.i(logInfo.className, createLog(logInfo, message))
     }
 
-    fun v(message: String) {
-        if (!isDebuggable) return
-        getMethodNames(Throwable().stackTrace)
-        Log.v(className, createLog(message))
-        log(Log.VERBOSE, className, createLog(message))
+    @JvmStatic
+    fun d(message: String?) {
+        if (!isDebuggable()) return
+        val logInfo = getLogInfo(Throwable().stackTrace)
+        Log.d(logInfo.className, createLog(logInfo, message))
     }
 
-    fun w(message: String) {
-        if (!isDebuggable) return
-        getMethodNames(Throwable().stackTrace)
-        Log.w(className, createLog(message))
-        log(Log.WARN, className, createLog(message))
+    @JvmStatic
+    fun v(message: String?) {
+        if (!isDebuggable()) return
+        val logInfo = getLogInfo(Throwable().stackTrace)
+        Log.v(logInfo.className, createLog(logInfo, message))
     }
 
-    fun wtf(message: String) {
-        if (!isDebuggable) return
-        getMethodNames(Throwable().stackTrace)
-        Log.wtf(className, createLog(message))
-        log(Log.ERROR, className, createLog("WatTheFuk: $message"))
+    @JvmStatic
+    fun w(message: String?) {
+        if (!isDebuggable()) return
+        val logInfo = getLogInfo(Throwable().stackTrace)
+        Log.w(logInfo.className, createLog(logInfo, message))
     }
 }

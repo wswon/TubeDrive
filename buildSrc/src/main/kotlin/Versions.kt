@@ -28,7 +28,7 @@ object Versions {
     const val glideVersion = "4.10.0"
 
     const val rxAndroidVersion = "3.0.0"
-    const val rxJavaVersion = "3.0.11"
+    const val rxJavaVersion = "3.0.1"
     const val rxAdapterVersion = "2.9.0"
     const val retrofitVersion = "2.6.2"
 

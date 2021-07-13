@@ -20,7 +20,7 @@ object Deps {
 
     object Rx {
         const val rxAndroid = "io.reactivex.rxjava3:rxandroid:${Versions.rxAndroidVersion}"
-        const val rxJava = "io.reactivex.rxjava3:rxjava:${Versions.rxJavaVersion}"
+        const val rxJava = "io.reactivex.rxjava3:rxkotlin:${Versions.rxJavaVersion}"
     }
 
     object Network {

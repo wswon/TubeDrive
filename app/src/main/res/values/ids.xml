@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="category_hospital" type="id" />
+    <item name="category_pharmacy" type="id" />
+    <item name="category_gas_station" type="id" />
+</resources>

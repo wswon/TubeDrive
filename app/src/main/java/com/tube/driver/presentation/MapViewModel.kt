@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tube.driver.DLog
-import com.tube.driver.domain.CategoryCode
+import com.tube.driver.domain.CategoryType
 import com.tube.driver.domain.entity.LatLng
 import com.tube.driver.domain.usecase.GetAddressByCategory
 import com.tube.driver.presentation.mapper.PlaceMapper
@@ -26,11 +26,11 @@ class MapViewModel @Inject constructor(
     val placeList: LiveData<List<PlaceItem>>
         get() = _placeList
 
-    private var selectedCategoryCode: CategoryCode = CategoryCode.HOSPITAL
+    private var selectedCategoryType: CategoryType = CategoryType.HOSPITAL
 
     fun search(latitude: Double, longitude: Double) {
         getAddressByCategory(
-            selectedCategoryCode,
+            selectedCategoryType,
             LatLng(latitude, longitude)
         )
             .map(placeMapper::transform)
@@ -49,6 +49,10 @@ class MapViewModel @Inject constructor(
     override fun onCleared() {
         compositeDisposable.clear()
         super.onCleared()
+    }
+
+    fun changeCategory(categoryType: CategoryType) {
+        selectedCategoryType = categoryType
     }
 
 }

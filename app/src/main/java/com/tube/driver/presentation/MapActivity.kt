@@ -62,6 +62,7 @@ class MapActivity : AppCompatActivity(),
 
             BottomSheetBehavior.from(bottomSheet)
                 .addBottomSheetCallback(createBottomSheetCallback(bottomSheetState))
+
         }
     }
 
@@ -78,39 +79,6 @@ class MapActivity : AppCompatActivity(),
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
         mapView.setShowCurrentLocationMarker(false)
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private var flag = false

@@ -50,7 +50,7 @@
         app:behavior_peekHeight="250dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
-        <LinearLayout
+        <com.tube.driver.presentation.CategoryButtonListLayout
             android:id="@+id/category_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,48 +58,7 @@
             android:gravity="end"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/category_hospital"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="3dp"
-                android:backgroundTint="@color/white"
-                android:contentDescription="@string/hospital"
-                android:src="@drawable/ic_hospital_32"
-                app:borderWidth="0dp"
-                app:maxImageSize="32dp" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/category_pharmacy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="3dp"
-                android:backgroundTint="@color/white"
-                android:contentDescription="@string/pharmacy"
-                android:src="@drawable/ic_pharmacy_32"
-                app:borderWidth="0dp"
-                app:maxImageSize="32dp" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/category_gas_station"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/white"
-                android:contentDescription="@string/gas_station"
-                android:src="@drawable/ic_gas_station_32"
-                app:borderWidth="0dp"
-                app:maxImageSize="32dp" />
-
-        </LinearLayout>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             style="@style/Widget.MaterialComponents.BottomSheet"

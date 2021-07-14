@@ -26,9 +26,11 @@ class MapViewModel @Inject constructor(
     val placeList: LiveData<List<PlaceItem>>
         get() = _placeList
 
+    private var selectedCategoryCode: CategoryCode = CategoryCode.HOSPITAL
+
     fun search(latitude: Double, longitude: Double) {
         getAddressByCategory(
-            CategoryCode.HOSPITAL,
+            selectedCategoryCode,
             LatLng(latitude, longitude)
         )
             .map(placeMapper::transform)

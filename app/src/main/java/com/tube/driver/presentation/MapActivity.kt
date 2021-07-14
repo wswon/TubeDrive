@@ -79,6 +79,40 @@ class MapActivity : AppCompatActivity(),
         mapView.setShowCurrentLocationMarker(false)
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private var flag = false
 
     override fun onCurrentLocationUpdate(

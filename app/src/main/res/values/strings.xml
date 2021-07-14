@@ -3,4 +3,7 @@
     <string name="load_more">더보기</string>
     <string name="place_title">장소</string>
     <string name="retry_search">이 지역 재검색</string>
+    <string name="hospital">병원</string>
+    <string name="pharmacy">약국</string>
+    <string name="gas_station">주유소</string>
 </resources>

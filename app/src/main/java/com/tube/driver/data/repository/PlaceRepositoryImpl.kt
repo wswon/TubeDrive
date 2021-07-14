@@ -1,6 +1,6 @@
 package com.tube.driver.data.repository
 
-import com.tube.driver.data.mapper.PlaceMapper
+import com.tube.driver.data.mapper.PlaceResponseMapper
 import com.tube.driver.data.remote.PlaceRemoteDataSource
 import com.tube.driver.domain.CategoryCode
 import com.tube.driver.domain.entity.LatLng
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
     private val remoteDataSource: PlaceRemoteDataSource,
-    private val placeMapper: PlaceMapper
+    private val placeResponseMapper: PlaceResponseMapper
 ) : PlaceRepository {
 
     override fun getAddressByCategory(
@@ -19,8 +19,6 @@ class PlaceRepositoryImpl @Inject constructor(
         latLng: LatLng
     ): Single<List<Place>> {
         return remoteDataSource.getAddressByCategory(categoryCode, latLng)
-            .map {
-                it.map(placeMapper::toPlace)
-            }
+            .map(placeResponseMapper::transform)
     }
 }

@@ -4,8 +4,8 @@ import com.tube.driver.data.response.PlaceResponse
 import com.tube.driver.domain.entity.Category
 import com.tube.driver.domain.entity.Place
 
-class PlaceMapper {
-    fun toPlace(placeResponse: PlaceResponse): Place {
+class PlaceResponseMapper {
+    fun transform(placeResponse: PlaceResponse): Place {
 
         return placeResponse.run {
 
@@ -34,5 +34,9 @@ class PlaceMapper {
                 longitude = x?.toDoubleOrNull() ?: -1.0
             )
         }
+    }
+
+    fun transform(placeResponseList: List<PlaceResponse>) : List<Place> {
+        return placeResponseList.map(this::transform)
     }
 }

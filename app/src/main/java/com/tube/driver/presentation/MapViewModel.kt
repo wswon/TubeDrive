@@ -5,6 +5,7 @@ import com.tube.driver.DLog
 import com.tube.driver.domain.CategoryCode
 import com.tube.driver.domain.entity.LatLng
 import com.tube.driver.domain.usecase.GetAddressByCategory
+import com.tube.driver.presentation.mapper.PlaceMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val getAddressByCategory: GetAddressByCategory
+    private val getAddressByCategory: GetAddressByCategory,
+    private val placeMapper: PlaceMapper
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -23,9 +25,12 @@ class MapViewModel @Inject constructor(
             CategoryCode.HOSPITAL,
             LatLng(latitude, longitude)
         )
+            .map(placeMapper::transform)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+
+
                 it.forEach {
                     DLog.d("$it")
                 }

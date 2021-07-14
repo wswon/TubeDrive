@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TubeDriver</string>
+    <string name="load_more">더보기</string>
 </resources>

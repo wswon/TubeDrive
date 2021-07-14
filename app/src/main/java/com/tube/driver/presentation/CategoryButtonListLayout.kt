@@ -21,6 +21,8 @@ class CategoryButtonListLayout @JvmOverloads constructor(
     defStyle: Int = 0
 ) : LinearLayout(context, attributeSet, defStyle) {
 
+    private var changeCategory: ((CategoryType) -> Unit)? = null
+
     init {
         addCategoryButton(CategoryType.HOSPITAL, true)
         addCategoryButton(CategoryType.PHARMACY)
@@ -33,7 +35,10 @@ class CategoryButtonListLayout @JvmOverloads constructor(
                 .root
                 .apply {
                     id = categoryType.id
-                    backgroundTintList = ContextCompat.getColorStateList(context, getSelectedBackgroundColor(isSelected))
+                    backgroundTintList = ContextCompat.getColorStateList(
+                        context,
+                        getSelectedBackgroundColor(isSelected)
+                    )
                     setImageResource(categoryType.drawableResId)
                     contentDescription = context.getString(categoryType.descriptionResId)
                     updateLayoutParams<MarginLayoutParams> {
@@ -61,6 +66,10 @@ class CategoryButtonListLayout @JvmOverloads constructor(
             }
 
         setCategoryButtonBackground(clickedButton, true)
+        val categoryType = CategoryType.findCategoryType(clickedButton.id)
+        if (categoryType.isSuccess) {
+            changeCategory?.invoke(categoryType.getOrThrow())
+        }
     }
 
     private fun setCategoryButtonBackground(
@@ -75,5 +84,9 @@ class CategoryButtonListLayout @JvmOverloads constructor(
 
     private fun getSelectedBackgroundColor(isSelected: Boolean): Int {
         return if (isSelected) R.color.ff1ea1f3 else R.color.white
+    }
+
+    fun setChangeCategoryListener(changeCategory: (CategoryType) -> Unit) {
+        this.changeCategory = changeCategory
     }
 }

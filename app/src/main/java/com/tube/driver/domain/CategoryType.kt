@@ -31,5 +31,16 @@ enum class CategoryType(
         R.id.category_gas_station,
         R.string.gas_station,
         R.drawable.ic_gas_station_32
-    )
+    );
+
+    companion object {
+        fun findCategoryType(@IdRes id: Int): Result<CategoryType> {
+            val type = values().firstOrNull { it.id == id}
+            return if(type != null) {
+                Result.success(type)
+            } else {
+                Result.failure(Throwable("Not Found CategoryType request id is $id"))
+            }
+        }
+    }
 }

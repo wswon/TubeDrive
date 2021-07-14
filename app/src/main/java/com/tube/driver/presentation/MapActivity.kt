@@ -63,6 +63,9 @@ class MapActivity : AppCompatActivity(),
             BottomSheetBehavior.from(bottomSheet)
                 .addBottomSheetCallback(createBottomSheetCallback(bottomSheetState))
 
+            categoryLayout.setChangeCategoryListener { categoryType ->
+                viewModel.changeCategory(categoryType)
+            }
         }
     }
 

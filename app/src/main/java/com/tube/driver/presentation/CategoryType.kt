@@ -1,4 +1,4 @@
-package com.tube.driver.domain
+package com.tube.driver.presentation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes

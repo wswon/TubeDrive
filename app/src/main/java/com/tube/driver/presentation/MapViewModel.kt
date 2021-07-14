@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tube.driver.DLog
-import com.tube.driver.domain.CategoryType
 import com.tube.driver.domain.entity.LatLng
 import com.tube.driver.domain.usecase.GetAddressByCategory
 import com.tube.driver.presentation.mapper.PlaceMapper
@@ -30,7 +29,7 @@ class MapViewModel @Inject constructor(
 
     fun search(latitude: Double, longitude: Double) {
         getAddressByCategory(
-            selectedCategoryType,
+            selectedCategoryType.code,
             LatLng(latitude, longitude)
         )
             .map(placeMapper::transform)

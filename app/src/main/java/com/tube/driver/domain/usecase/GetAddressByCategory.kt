@@ -1,6 +1,5 @@
 package com.tube.driver.domain.usecase
 
-import com.tube.driver.domain.CategoryType
 import com.tube.driver.domain.entity.LatLng
 import com.tube.driver.domain.entity.Place
 import com.tube.driver.domain.repository.PlaceRepository
@@ -12,9 +11,9 @@ class GetAddressByCategory @Inject constructor(
 ) {
 
     operator fun invoke(
-        categoryType: CategoryType,
+        categoryCode: String,
         latLng: LatLng
     ): Single<List<Place>> {
-        return repository.getAddressByCategory(categoryType, latLng)
+        return repository.getAddressByCategory(categoryCode, latLng)
     }
 }

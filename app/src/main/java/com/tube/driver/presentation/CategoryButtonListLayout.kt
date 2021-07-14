@@ -12,7 +12,6 @@ import androidx.core.view.updateLayoutParams
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tube.driver.R
 import com.tube.driver.databinding.ViewCategoryButtonBinding
-import com.tube.driver.domain.CategoryType
 import com.tube.driver.dp
 
 class CategoryButtonListLayout @JvmOverloads constructor(

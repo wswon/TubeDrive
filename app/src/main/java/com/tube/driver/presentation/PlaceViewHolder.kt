@@ -20,6 +20,12 @@ sealed class PlaceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 root.setOnClickListener {
                     clickPlaceItem(placeItem)
                 }
+
+                name.text = placeItem.name
+                subCategory.text = placeItem.subCategory
+                distance.text = placeItem.distance
+                address.text = placeItem.addressName
+                phoneNumber.text = placeItem.phoneNumber
             }
         }
     }

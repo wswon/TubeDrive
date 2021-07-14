@@ -6,13 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
-    android:padding="10dp"
     tools:background="@color/white">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -39,7 +40,7 @@
         android:layout_marginTop="4dp"
         android:textColor="@color/black"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/name"
         app:layout_constraintTop_toBottomOf="@id/name"
         tools:text="194m" />
 
@@ -68,10 +69,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="10dp"
         android:textColor="@color/keyColor"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/name"
         app:layout_constraintTop_toBottomOf="@id/distance"
         tools:text="02-1234-5678" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:alpha=".3"
+        android:background="@color/ff7c7c7c"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

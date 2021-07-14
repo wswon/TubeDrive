@@ -10,7 +10,7 @@ class PlaceResponseMapper {
         return placeResponse.run {
 
             val categories = categoryName.orEmpty()
-                .trim()
+                .replace(" ", "")
                 .split(">")
 
             val category = Category(

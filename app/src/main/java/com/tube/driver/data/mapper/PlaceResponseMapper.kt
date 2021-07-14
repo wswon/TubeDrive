@@ -2,6 +2,7 @@ package com.tube.driver.data.mapper
 
 import com.tube.driver.data.response.PlaceResponse
 import com.tube.driver.domain.entity.Category
+import com.tube.driver.domain.entity.LatLng
 import com.tube.driver.domain.entity.Place
 
 class PlaceResponseMapper {
@@ -30,13 +31,12 @@ class PlaceResponseMapper {
                 phone = phone.orEmpty(),
                 categoryGroupCode = categoryGroupCode.orEmpty(),
                 categoryGroupName = categoryGroupName.orEmpty(),
-                latitude = y?.toDoubleOrNull() ?: -1.0,
-                longitude = x?.toDoubleOrNull() ?: -1.0
+                latLng = LatLng(y?.toDoubleOrNull() ?: -1.0, x?.toDoubleOrNull() ?: -1.0)
             )
         }
     }
 
-    fun transform(placeResponseList: List<PlaceResponse>) : List<Place> {
+    fun transform(placeResponseList: List<PlaceResponse>): List<Place> {
         return placeResponseList.map(this::transform)
     }
 }

@@ -11,6 +11,5 @@ class Place(
     val phone: String,
     val categoryGroupCode: String,
     val categoryGroupName: String,
-    val latitude: Double,
-    val longitude: Double
+    val latLng: LatLng
 )

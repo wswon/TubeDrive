@@ -60,25 +60,17 @@ class MapActivity : AppCompatActivity(),
 
             placeListView.adapter = placeAdapter
 
-            placeAdapter.submitList(
-                listOf(
-                    PlaceItem.Item("", "", "", "", "", "", ""),
-                    PlaceItem.Item("", "", "", "", "", "", ""),
-                    PlaceItem.Item("", "", "", "", "", "", ""),
-                    PlaceItem.Item("", "", "", "", "", "", ""),
-                    PlaceItem.Item("", "", "", "", "", "", ""),
-                    PlaceItem.Item("", "", "", "", "", "", ""),
-                    PlaceItem.LoadMoreFooter
-                )
-            )
-
             BottomSheetBehavior.from(bottomSheet)
                 .addBottomSheetCallback(createBottomSheetCallback(bottomSheetState))
         }
     }
 
     private fun setupViewModel() {
-
+        with(viewModel) {
+            placeList.observe(this@MapActivity, { placeList ->
+                placeAdapter.submitList(placeList)
+            })
+        }
     }
 
     override fun onDestroy() {

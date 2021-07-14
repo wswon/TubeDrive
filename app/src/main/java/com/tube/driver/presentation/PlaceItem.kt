@@ -1,5 +1,7 @@
 package com.tube.driver.presentation
 
+import com.tube.driver.domain.entity.LatLng
+
 sealed interface PlaceItem {
     val id: String
 
@@ -10,7 +12,8 @@ sealed interface PlaceItem {
         val phoneNumber: String,
         val addressName: String,
         val category: String,
-        val subCategory: String
+        val subCategory: String,
+        val latLng: LatLng
     ) : PlaceItem
 
     object LoadMoreFooter : PlaceItem {

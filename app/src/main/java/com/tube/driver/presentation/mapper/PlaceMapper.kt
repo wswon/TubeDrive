@@ -15,7 +15,8 @@ class PlaceMapper {
                 phoneNumber = phone,
                 addressName = if (roadAddressName.isNotEmpty()) roadAddressName else addressName,
                 category = category.middleCategory,
-                subCategory = category.subCategory
+                subCategory = category.subCategory,
+                latLng = latLng
             )
         }
     }

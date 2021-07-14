@@ -1,5 +1,7 @@
 package com.tube.driver.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tube.driver.DLog
 import com.tube.driver.domain.CategoryCode
@@ -20,20 +22,23 @@ class MapViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
+    private val _placeList = MutableLiveData<List<PlaceItem>>()
+    val placeList: LiveData<List<PlaceItem>>
+        get() = _placeList
+
     fun search(latitude: Double, longitude: Double) {
         getAddressByCategory(
             CategoryCode.HOSPITAL,
             LatLng(latitude, longitude)
         )
             .map(placeMapper::transform)
+            .map {
+                it + PlaceItem.LoadMoreFooter
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-
-
-                it.forEach {
-                    DLog.d("$it")
-                }
+                _placeList.value = it
             }, {
                 DLog.e("$it")
             })

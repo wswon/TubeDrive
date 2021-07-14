@@ -9,8 +9,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tube.driver.DLog
 import com.tube.driver.databinding.ActivityMapBinding
 import dagger.hilt.android.AndroidEntryPoint
+import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+
 
 @AndroidEntryPoint
 class MapActivity : AppCompatActivity(),
@@ -73,6 +75,11 @@ class MapActivity : AppCompatActivity(),
         with(viewModel) {
             placeList.observe(this@MapActivity, { placeList ->
                 placeAdapter.submitList(placeList)
+                placeList.forEach { item: PlaceItem ->
+                    if (item is PlaceItem.Item){
+                        addMarker(item)
+                    }
+                }
             })
         }
     }
@@ -81,6 +88,23 @@ class MapActivity : AppCompatActivity(),
         super.onDestroy()
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
         mapView.setShowCurrentLocationMarker(false)
+    }
+
+
+    fun addMarker(markerItem: PlaceItem.Item) {
+        val marker = MapPOIItem().apply {
+            itemName = markerItem.name
+            tag = 0
+            mapPoint = MapPoint.mapPointWithGeoCoord(
+                markerItem.latLng.latitude,
+                markerItem.latLng.longitude
+            )
+            markerType = MapPOIItem.MarkerType.BluePin // 기본으로 제공하는 BluePin 마커 모양.
+
+            selectedMarkerType =
+                MapPOIItem.MarkerType.RedPin // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양
+        }
+        mapView.addPOIItem(marker)
     }
 
 

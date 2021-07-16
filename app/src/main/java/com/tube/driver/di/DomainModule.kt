@@ -1,7 +1,7 @@
 package com.tube.driver.di
 
 import com.tube.driver.domain.repository.PlaceRepository
-import com.tube.driver.domain.usecase.GetAddressByCategory
+import com.tube.driver.domain.usecase.GetPlaceListByCategory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object DomainModule {
 
     @Singleton
     @Provides
-    fun provideGetAddressByCategory(repository: PlaceRepository): GetAddressByCategory {
-        return GetAddressByCategory(repository)
+    fun provideGetAddressByCategory(repository: PlaceRepository): GetPlaceListByCategory {
+        return GetPlaceListByCategory(repository)
     }
 }

@@ -22,7 +22,7 @@ class MapActivity : AppCompatActivity() {
     private val mapView: MapView
         get() = binding.mapViewContainer
 
-    private lateinit var markerManager: MarkerManager
+    private lateinit var mapMarkerManager: MapMarkerManager
 
     private val placeAdapter: PlaceAdapter by lazy {
         PlaceAdapter(
@@ -35,7 +35,7 @@ class MapActivity : AppCompatActivity() {
     private val placeLoadMoreAdapter: PlaceLoadMoreAdapter by lazy {
         PlaceLoadMoreAdapter(
             clickLoadMore = {
-
+                viewModel.loadMore()
             }
         )
     }
@@ -51,15 +51,15 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun setMarkerManager() {
-        markerManager = MarkerManager(this, mapView).apply {
-            setEventListener(object : MarkerManager.EventListener {
+        mapMarkerManager = MapMarkerManager(this, mapView).apply {
+            setEventListener(object : MapMarkerManager.EventListener {
                 override fun onFirstCurrentLocation(latLng: LatLng) {
-                    viewModel.search()
+                    viewModel.search(latLng)
                 }
             })
         }
 
-        lifecycle.addObserver(markerManager)
+        lifecycle.addObserver(mapMarkerManager)
     }
 
     private fun setupView() {
@@ -67,8 +67,8 @@ class MapActivity : AppCompatActivity() {
             placeListView.adapter = ConcatAdapter(placeAdapter, placeLoadMoreAdapter)
 
             refreshButton.setOnClickListener {
-                val centerPoint = mapView.mapCenterPoint.mapPointGeoCoord
-                viewModel.search(centerPoint.latitude, centerPoint.longitude)
+                val centerLatLng = mapMarkerManager.getCenterPoint()
+                viewModel.search(centerLatLng)
             }
 
             BottomSheetBehavior.from(bottomSheet)
@@ -85,7 +85,7 @@ class MapActivity : AppCompatActivity() {
             placeList.observe(this@MapActivity, { placeList ->
                 placeAdapter.submitList(placeList)
 
-                placeList.forEach(markerManager::addMarker)
+                placeList.forEach(mapMarkerManager::addMarker)
 
                 setLoadMoreButtonVisibility(placeList.isNotEmpty())
             })

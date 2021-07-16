@@ -10,11 +10,10 @@ import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
-class MarkerManager(
+class MapMarkerManager(
     private val lifecycleOwner: LifecycleOwner,
     private val mapView: MapView
 ) : LifecycleObserver {
-
 
     interface EventListener {
         fun onFirstCurrentLocation(latLng: LatLng)
@@ -52,7 +51,7 @@ class MarkerManager(
                 }
 
                 override fun onFirstCurrentLocation(latLng: LatLng) {
-
+                    eventListener?.onFirstCurrentLocation(latLng)
                 }
             })
         }
@@ -85,5 +84,10 @@ class MarkerManager(
                 MapPOIItem.MarkerType.RedPin // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양
         }
         mapView.addPOIItem(marker)
+    }
+
+    fun getCenterPoint(): LatLng {
+        val mapPointGeoCoord = mapView.mapCenterPoint.mapPointGeoCoord
+        return LatLng(mapPointGeoCoord.latitude, mapPointGeoCoord.longitude)
     }
 }

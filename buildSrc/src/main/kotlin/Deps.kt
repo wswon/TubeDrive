@@ -6,8 +6,8 @@ object Deps {
             const val fragment = "androidx.fragment:fragment-ktx:${Versions.fragmentVersion}"
             const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompatVersion}"
             const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayoutVersion}"
+            const val recyclerView = "androidx.recyclerview:recyclerview:${Versions.recyclerViewVersion}"
         }
-
         const val material = "com.google.android.material:material:${Versions.materialVersion}"
     }
 

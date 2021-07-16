@@ -55,6 +55,7 @@ dependencies {
     implementation(Deps.Android.X.fragment)
     implementation(Deps.Android.X.appCompat)
     implementation(Deps.Android.X.constraintLayout)
+    implementation(Deps.Android.X.recyclerView)
 
     implementation(Deps.Android.material)
 

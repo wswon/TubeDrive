@@ -24,6 +24,7 @@ object Versions {
     const val appCompatVersion = "1.2.0"
     const val constraintLayoutVersion = "2.0.4"
     const val coreVersion = "1.3.2"
+    const val recyclerViewVersion = "1.2.1"
 
     const val glideVersion = "4.10.0"
 

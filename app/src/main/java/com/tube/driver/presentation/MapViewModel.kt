@@ -27,10 +27,11 @@ class MapViewModel @Inject constructor(
 
     private var selectedCategoryType: CategoryType = CategoryType.HOSPITAL
 
-    fun search(latitude: Double, longitude: Double) {
+    fun search(latLng: LatLng) {
+        _placeList.value = emptyList()
         getAddressByCategory(
             selectedCategoryType.code,
-            LatLng(latitude, longitude)
+            latLng
         )
             .map(placeMapper::transform)
             .subscribeOn(Schedulers.io())

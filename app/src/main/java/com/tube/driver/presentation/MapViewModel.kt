@@ -26,11 +26,15 @@ class MapViewModel @Inject constructor(
     val placeList: LiveData<List<PlaceItem.Item>>
         get() = _placeList
 
-    private var selectedCategoryType: CategoryType = CategoryType.HOSPITAL
+    private val _hasNextPage = MutableLiveData(false)
+    val hasNextPage: LiveData<Boolean>
+        get() = _hasNextPage
 
+    private var selectedCategoryType: CategoryType = CategoryType.HOSPITAL
     private var latestLatLng: LatLng? = null
+
+
     private var currentPage: Int = 1
-    private var hasNextPage = false
 
     fun search(latLng: LatLng) {
         latestLatLng = latLng
@@ -40,26 +44,23 @@ class MapViewModel @Inject constructor(
         getSearchPlace(latLng, 1)
             .subscribe({ (placeList, hasNextPage) ->
                 _placeList.value = placeList
-                this.hasNextPage = hasNextPage
+                _hasNextPage.value = hasNextPage
             }, {
                 DLog.e("$it")
             })
     }
 
     fun loadMore() {
-        if (!hasNextPage) {
+        if (hasNextPage.value == true) {
             latestLatLng?.let { latLng ->
                 getSearchPlace(latLng, ++currentPage)
                     .subscribe({ (placeList, hasNextPage) ->
                         _placeList.value = _placeList.value.orEmpty() + placeList
-                        this.hasNextPage = hasNextPage
+                        _hasNextPage.value = hasNextPage
                     }, {
                         DLog.e("$it")
                     })
             }
-        } else {
-            DLog.d("없다")
-            // 더이상 없다
         }
     }
 

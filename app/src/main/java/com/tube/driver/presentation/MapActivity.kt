@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.tube.driver.DLog
 import com.tube.driver.databinding.ActivityMapBinding
 import com.tube.driver.domain.entity.LatLng
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,8 +87,11 @@ class MapActivity : AppCompatActivity() {
                 placeAdapter.submitList(placeList)
 
                 placeList.forEach(mapMarkerManager::addMarker)
+            })
 
-                setLoadMoreButtonVisibility(placeList.isNotEmpty())
+            hasNextPage.observe(this@MapActivity, { hasNextPage ->
+                DLog.d("hasNextPage $hasNextPage")
+                setLoadMoreButtonVisibility(hasNextPage)
             })
         }
     }

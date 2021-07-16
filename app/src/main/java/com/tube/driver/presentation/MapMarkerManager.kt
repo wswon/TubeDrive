@@ -1,17 +1,19 @@
 package com.tube.driver.presentation
 
+import android.graphics.BitmapFactory
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.tube.driver.R
 import com.tube.driver.domain.entity.LatLng
 import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPOIItem.ImageOffset
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 class MapMarkerManager(
-    private val lifecycleOwner: LifecycleOwner,
+    private val lifecycleOwner: AppCompatActivity,
     private val mapView: MapView
 ) : LifecycleObserver {
 
@@ -28,28 +30,9 @@ class MapMarkerManager(
     private val isAtLeast: Boolean
         get() = lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.INITIALIZED)
 
-    private val mapEventListener by lazy {
-        object : MapEventProvider.MapEventListener {
-            override fun onMapViewInitialized(mapView: MapView) {
-                setUseCustomMarker()
-            }
-
-            override fun onFirstCurrentLocation(mapPoint: MapPoint) {
-                mapView.setMapCenterPoint(mapPoint, false)
-                val latLng =
-                    LatLng(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
-                eventListener?.onFirstCurrentLocation(latLng)
-            }
-
-            override fun onMarkerSelected(selectedPoint: MapPoint) {
-                mapView.setMapCenterPoint(selectedPoint, true)
-            }
-        }
-    }
-
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun created() {
-        setupMapEventListener(mapView)
+        connectMapEventListener()
         mapView.currentLocationTrackingMode =
             MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
     }
@@ -62,11 +45,31 @@ class MapMarkerManager(
         lifecycleOwner.lifecycle.removeObserver(this)
     }
 
-    private fun setupMapEventListener(mapView: MapView) {
-        val mapEventProvider = MapEventProvider().apply {
-            setMapEventListener(mapEventListener)
-        }
+    private val mapEventProvider by lazy {
+        MapEventProvider(
+            object : MapEventProvider.MapEventListener {
+                override fun onMapViewInitialized(mapView: MapView) {
+                    setUseCustomMarker()
+                }
 
+                override fun onFirstCurrentLocation(mapPoint: MapPoint) {
+                    mapView.setMapCenterPoint(mapPoint, false)
+                    val latLng =
+                        LatLng(
+                            mapPoint.mapPointGeoCoord.latitude,
+                            mapPoint.mapPointGeoCoord.longitude
+                        )
+                    eventListener?.onFirstCurrentLocation(latLng)
+                }
+
+                override fun onMarkerSelected(selectedPoint: MapPoint) {
+                    mapView.setMapCenterPoint(selectedPoint, true)
+                }
+            }
+        )
+    }
+
+    private fun connectMapEventListener() {
         mapView.setMapViewEventListener(mapEventProvider)
         mapView.setCurrentLocationEventListener(mapEventProvider)
         mapView.setPOIItemEventListener(mapEventProvider)
@@ -75,32 +78,35 @@ class MapMarkerManager(
     private fun setUseCustomMarker() {
         mapView.setCustomCurrentLocationMarkerTrackingImage(
             R.drawable.ic_red_dot,
-            MapPOIItem.ImageOffset(10, 10)
+            ImageOffset(10, 10)
         )
-        mapView.setCustomCurrentLocationMarkerImage(
-            R.drawable.ic_red_dot,
-            MapPOIItem.ImageOffset(15, 15)
+
+        mapView.setCustomCurrentLocationMarkerDirectionImage(
+            R.drawable.custom_map_present_direction,
+            ImageOffset(15, 15)
         )
     }
 
     fun addMarker(markerItem: PlaceItem.Item) {
         val marker = MapPOIItem().apply {
             itemName = markerItem.name
-            tag = 0
+            tag = markerItem.id.toInt()
             mapPoint = MapPoint.mapPointWithGeoCoord(
                 markerItem.latLng.latitude,
                 markerItem.latLng.longitude
             )
 
-            markerType = MapPOIItem.MarkerType.BluePin // 기본으로 제공하는 BluePin 마커 모양.
-
-
-//            this.customImageBitmap =
-//            this.customSelectedImageBitmap =
+            markerType = MapPOIItem.MarkerType.CustomImage
             selectedMarkerType =
-                MapPOIItem.MarkerType.CustomImage // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양
+                MapPOIItem.MarkerType.CustomImage
+            customImageBitmap =
+                BitmapFactory.decodeResource(lifecycleOwner.resources, R.drawable.ic_marker)
+            customSelectedImageBitmap = BitmapFactory.decodeResource(
+                lifecycleOwner.resources,
+                R.drawable.ic_marker_selected
+            )
+            showAnimationType = MapPOIItem.ShowAnimationType.SpringFromGround
         }
-
 
         mapView.addPOIItem(marker)
     }
@@ -108,5 +114,9 @@ class MapMarkerManager(
     fun getCenterPoint(): LatLng {
         val mapPointGeoCoord = mapView.mapCenterPoint.mapPointGeoCoord
         return LatLng(mapPointGeoCoord.latitude, mapPointGeoCoord.longitude)
+    }
+
+    fun clearAllMarker() {
+        mapView.removeAllPOIItems()
     }
 }

@@ -5,7 +5,9 @@ import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
-class MapEventProvider :
+class MapEventProvider(
+    private val mapEventListener: MapEventListener
+) :
     MapView.MapViewEventListener,
     MapView.CurrentLocationEventListener,
     MapView.POIItemEventListener {
@@ -18,15 +20,9 @@ class MapEventProvider :
 
     private var firstLocation = false
 
-    private var mapEventListener: MapEventListener? = null
-
-    fun setMapEventListener(mapEventListener: MapEventListener) {
-        this.mapEventListener = mapEventListener
-    }
-
     override fun onMapViewInitialized(mapView: MapView?) {
         if (mapView != null) {
-            mapEventListener?.onMapViewInitialized(mapView)
+            mapEventListener.onMapViewInitialized(mapView)
         }
     }
 
@@ -54,7 +50,7 @@ class MapEventProvider :
         currentLocation?.mapPointGeoCoord?.let { mapPointGeo ->
             if (!firstLocation) {
                 firstLocation = true
-                mapEventListener?.onFirstCurrentLocation(currentLocation)
+                mapEventListener.onFirstCurrentLocation(currentLocation)
             }
 
             logCurrentLocation(mapPointGeo, accuracyInMeters)
@@ -70,7 +66,7 @@ class MapEventProvider :
     override fun onPOIItemSelected(mapView: MapView?, mapItem: MapPOIItem?) {
         val selectedMarkerPoint = mapItem?.mapPoint
         if (selectedMarkerPoint != null) {
-            mapEventListener?.onMarkerSelected(selectedMarkerPoint)
+            mapEventListener.onMarkerSelected(selectedMarkerPoint)
         }
     }
 

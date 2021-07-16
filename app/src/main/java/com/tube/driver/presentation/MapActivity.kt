@@ -69,6 +69,7 @@ class MapActivity : AppCompatActivity() {
             refreshButton.setOnClickListener {
                 val centerLatLng = mapMarkerManager.getCenterPoint()
                 viewModel.search(centerLatLng)
+                mapMarkerManager.clearAllMarker()
             }
 
             BottomSheetBehavior.from(bottomSheet)

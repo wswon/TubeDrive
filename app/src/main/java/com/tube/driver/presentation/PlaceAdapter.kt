@@ -5,40 +5,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 
 class PlaceAdapter(
-    private val clickPlaceItem: (PlaceItem.Item) -> Unit,
-    private val clickLoadMore: () -> Unit,
-) : ListAdapter<PlaceItem, PlaceViewHolder>(diffCallback) {
+    private val clickPlaceItem: (PlaceItem.Item) -> Unit
+) : ListAdapter<PlaceItem.Item, PlaceViewHolder.Item>(diffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
-        return when (viewType) {
-            TYPE_ITEM -> PlaceViewHolder.Item(parent, clickPlaceItem)
-            TYPE_FOOTER -> PlaceViewHolder.Footer(parent, clickLoadMore)
-            else -> error("Invalid viewType $viewType")
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder.Item {
+        return PlaceViewHolder.Item(parent, clickPlaceItem)
     }
 
-    override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
-        if (holder is PlaceViewHolder.Item) {
-            holder.bind(currentList[position] as PlaceItem.Item)
-        }
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when (currentList[position]) {
-            is PlaceItem.Item -> TYPE_ITEM
-            is PlaceItem.LoadMoreFooter -> TYPE_FOOTER
-        }
+    override fun onBindViewHolder(holder: PlaceViewHolder.Item, position: Int) {
+        holder.bind(currentList[position])
     }
 
     companion object {
-        private const val TYPE_ITEM = 1
-        private const val TYPE_FOOTER = 2
-
-        val diffCallback = object : DiffUtil.ItemCallback<PlaceItem>() {
-            override fun areItemsTheSame(oldItem: PlaceItem, newItem: PlaceItem): Boolean =
+        val diffCallback = object : DiffUtil.ItemCallback<PlaceItem.Item>() {
+            override fun areItemsTheSame(oldItem: PlaceItem.Item, newItem: PlaceItem.Item): Boolean =
                 oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: PlaceItem, newItem: PlaceItem): Boolean =
+            override fun areContentsTheSame(oldItem: PlaceItem.Item, newItem: PlaceItem.Item): Boolean =
                 oldItem == newItem
         }
     }

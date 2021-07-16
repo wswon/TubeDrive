@@ -21,8 +21,8 @@ class MapViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val _placeList = MutableLiveData<List<PlaceItem>>()
-    val placeList: LiveData<List<PlaceItem>>
+    private val _placeList = MutableLiveData<List<PlaceItem.Item>>()
+    val placeList: LiveData<List<PlaceItem.Item>>
         get() = _placeList
 
     private var selectedCategoryType: CategoryType = CategoryType.HOSPITAL
@@ -33,9 +33,6 @@ class MapViewModel @Inject constructor(
             LatLng(latitude, longitude)
         )
             .map(placeMapper::transform)
-            .map {
-                it + PlaceItem.LoadMoreFooter
-            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

@@ -30,7 +30,7 @@ sealed class PlaceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    class Footer(
+    class LoadMore(
         parent: ViewGroup,
         private val clickLoadMore: () -> Unit,
         binding: ItemLoadMoreBinding =

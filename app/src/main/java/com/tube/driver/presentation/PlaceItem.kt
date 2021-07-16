@@ -3,10 +3,9 @@ package com.tube.driver.presentation
 import com.tube.driver.domain.entity.LatLng
 
 sealed interface PlaceItem {
-    val id: String
 
     data class Item(
-        override val id: String,
+        val id: String,
         val name: String,
         val distance: String,
         val phoneNumber: String,
@@ -16,8 +15,5 @@ sealed interface PlaceItem {
         val latLng: LatLng
     ) : PlaceItem
 
-    object LoadMoreFooter : PlaceItem {
-        override val id: String
-            get() = "LoadMoreFooter"
-    }
+    object LoadMoreFooter : PlaceItem
 }

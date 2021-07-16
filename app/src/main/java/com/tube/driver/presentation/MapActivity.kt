@@ -1,21 +1,26 @@
 package com.tube.driver.presentation
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ConcatAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tube.driver.DLog
+import com.tube.driver.R
 import com.tube.driver.databinding.ActivityMapBinding
 import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPOIItem.ImageOffset
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 
 @AndroidEntryPoint
 class MapActivity : AppCompatActivity(),
+    MapView.MapViewEventListener,
     MapView.CurrentLocationEventListener {
 
     private lateinit var binding: ActivityMapBinding
@@ -30,7 +35,12 @@ class MapActivity : AppCompatActivity(),
         PlaceAdapter(
             clickPlaceItem = {
 
-            },
+            }
+        )
+    }
+
+    private val placeLoadMoreAdapter: PlaceLoadMoreAdapter by lazy {
+        PlaceLoadMoreAdapter(
             clickLoadMore = {
 
             }
@@ -51,16 +61,16 @@ class MapActivity : AppCompatActivity(),
             mapView.run {
                 setCurrentLocationEventListener(this@MapActivity)
                 currentLocationTrackingMode =
-                    MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+                    MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
             }
+
+            placeListView.adapter = ConcatAdapter(placeAdapter, placeLoadMoreAdapter)
+            placeLoadMoreAdapter.submitList(listOf(PlaceItem.LoadMoreFooter))
 
             refreshButton.setOnClickListener {
-                latestCurrentMapPoint?.let { mapPoint ->
-                    viewModel.search(mapPoint.latitude, mapPoint.longitude)
-                }
+                val centerPoint = mapView.mapCenterPoint.mapPointGeoCoord
+                viewModel.search(centerPoint.latitude, centerPoint.longitude)
             }
-
-            placeListView.adapter = placeAdapter
 
             BottomSheetBehavior.from(bottomSheet)
                 .addBottomSheetCallback(createBottomSheetCallback(bottomSheetState))
@@ -68,6 +78,38 @@ class MapActivity : AppCompatActivity(),
             categoryLayout.setChangeCategoryListener { categoryType ->
                 viewModel.changeCategory(categoryType)
             }
+
+
+            mapView.setCurrentLocationRadius(0)
+            mapView.setDefaultCurrentLocationMarker()
+
+            placeTitle.setOnClickListener {
+                setEnableCustomMarker(isUsingCustomLocationMarker)
+                isUsingCustomLocationMarker = !isUsingCustomLocationMarker
+            }
+        }
+    }
+
+    private var isUsingCustomLocationMarker = false
+
+    private fun setEnableCustomMarker(enableCustomMarker: Boolean) {
+        if (enableCustomMarker) {
+            mapView.setCurrentLocationRadius(100) // meter
+            mapView.setCurrentLocationRadiusFillColor(Color.argb(77, 255, 255, 0))
+            mapView.setCurrentLocationRadiusStrokeColor(Color.argb(77, 255, 165, 0))
+            val trackingImageAnchorPointOffset = ImageOffset(10, 10) // 좌하단(0,0) 기준 앵커포인트 오프셋
+            val offImageAnchorPointOffset = ImageOffset(15, 15)
+            mapView.setCustomCurrentLocationMarkerTrackingImage(
+                R.drawable.ic_red_dot,
+                trackingImageAnchorPointOffset
+            )
+            mapView.setCustomCurrentLocationMarkerImage(
+                R.drawable.ic_red_dot,
+                offImageAnchorPointOffset
+            )
+        } else {
+            mapView.setCurrentLocationRadius(0)
+            mapView.setDefaultCurrentLocationMarker()
         }
     }
 
@@ -76,7 +118,7 @@ class MapActivity : AppCompatActivity(),
             placeList.observe(this@MapActivity, { placeList ->
                 placeAdapter.submitList(placeList)
                 placeList.forEach { item: PlaceItem ->
-                    if (item is PlaceItem.Item){
+                    if (item is PlaceItem.Item) {
                         addMarker(item)
                     }
                 }
@@ -91,7 +133,7 @@ class MapActivity : AppCompatActivity(),
     }
 
 
-    fun addMarker(markerItem: PlaceItem.Item) {
+    private fun addMarker(markerItem: PlaceItem.Item) {
         val marker = MapPOIItem().apply {
             itemName = markerItem.name
             tag = 0
@@ -107,6 +149,41 @@ class MapActivity : AppCompatActivity(),
         mapView.addPOIItem(marker)
     }
 
+    override fun onMapViewInitialized(mapView: MapView?) {
+
+    }
+
+    override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
+
+    }
+
+    override fun onMapViewSingleTapped(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {
+
+    }
 
     private var flag = false
 
@@ -129,8 +206,11 @@ class MapActivity : AppCompatActivity(),
 
             if (!flag) {
                 flag = true
+                mapView?.setMapCenterPoint(currentLocation, false)
+
                 viewModel.search(mapPointGeo.latitude, mapPointGeo.longitude)
             }
+            setEnableCustomMarker(true)
         }
     }
 
@@ -145,7 +225,6 @@ class MapActivity : AppCompatActivity(),
     override fun onCurrentLocationUpdateCancelled(p0: MapView?) {
 
     }
-
 
     private fun createBottomSheetCallback(text: TextView): BottomSheetBehavior.BottomSheetCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
@@ -173,5 +252,7 @@ class MapActivity : AppCompatActivity(),
             ) {
             }
         }
+
+
 }
 

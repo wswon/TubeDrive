@@ -38,21 +38,28 @@ class MapViewModel @Inject constructor(
         clearPlaceList()
 
         getSearchPlace(latLng, 1)
-            .subscribe({
-                _placeList.value = it
+            .subscribe({ (placeList, hasNextPage) ->
+                _placeList.value = placeList
+                this.hasNextPage = hasNextPage
             }, {
                 DLog.e("$it")
             })
     }
 
     fun loadMore() {
-        latestLatLng?.let { latLng ->
-            getSearchPlace(latLng, currentPage++)
-                .subscribe({
-                    _placeList.value = placeList.value.orEmpty() + it
-                }, {
-                    DLog.e("$it")
-                })
+        if (!hasNextPage) {
+            latestLatLng?.let { latLng ->
+                getSearchPlace(latLng, ++currentPage)
+                    .subscribe({ (placeList, hasNextPage) ->
+                        _placeList.value = _placeList.value.orEmpty() + placeList
+                        this.hasNextPage = hasNextPage
+                    }, {
+                        DLog.e("$it")
+                    })
+            }
+        } else {
+            DLog.d("없다")
+            // 더이상 없다
         }
     }
 
@@ -68,7 +75,9 @@ class MapViewModel @Inject constructor(
                 page
             )
         )
-            .map(placeMapper::transform)
+            .map {
+                placeMapper.transform(it.placeList) to it.hasNextPage
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
@@ -80,5 +89,4 @@ class MapViewModel @Inject constructor(
         compositeDisposable.clear()
         super.onCleared()
     }
-
 }

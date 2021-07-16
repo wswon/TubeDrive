@@ -28,6 +28,25 @@ class MapMarkerManager(
     private val isAtLeast: Boolean
         get() = lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.INITIALIZED)
 
+    private val mapEventListener by lazy {
+        object : MapEventProvider.MapEventListener {
+            override fun onMapViewInitialized(mapView: MapView) {
+                setUseCustomMarker()
+            }
+
+            override fun onFirstCurrentLocation(mapPoint: MapPoint) {
+                mapView.setMapCenterPoint(mapPoint, false)
+                val latLng =
+                    LatLng(mapPoint.mapPointGeoCoord.latitude, mapPoint.mapPointGeoCoord.longitude)
+                eventListener?.onFirstCurrentLocation(latLng)
+            }
+
+            override fun onMarkerSelected(selectedPoint: MapPoint) {
+                mapView.setMapCenterPoint(selectedPoint, true)
+            }
+        }
+    }
+
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun created() {
         setupMapEventListener(mapView)
@@ -45,18 +64,12 @@ class MapMarkerManager(
 
     private fun setupMapEventListener(mapView: MapView) {
         val mapEventProvider = MapEventProvider().apply {
-            setMapEventListener(object : MapEventProvider.MapEventListener {
-                override fun onMapViewInitialized(mapView: MapView) {
-                    setUseCustomMarker()
-                }
-
-                override fun onFirstCurrentLocation(latLng: LatLng) {
-                    eventListener?.onFirstCurrentLocation(latLng)
-                }
-            })
+            setMapEventListener(mapEventListener)
         }
+
         mapView.setMapViewEventListener(mapEventProvider)
         mapView.setCurrentLocationEventListener(mapEventProvider)
+        mapView.setPOIItemEventListener(mapEventProvider)
     }
 
     private fun setUseCustomMarker() {
@@ -78,11 +91,17 @@ class MapMarkerManager(
                 markerItem.latLng.latitude,
                 markerItem.latLng.longitude
             )
+
             markerType = MapPOIItem.MarkerType.BluePin // 기본으로 제공하는 BluePin 마커 모양.
 
+
+//            this.customImageBitmap =
+//            this.customSelectedImageBitmap =
             selectedMarkerType =
-                MapPOIItem.MarkerType.RedPin // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양
+                MapPOIItem.MarkerType.CustomImage // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양
         }
+
+
         mapView.addPOIItem(marker)
     }
 

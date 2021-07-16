@@ -1,17 +1,19 @@
 package com.tube.driver.presentation
 
 import com.tube.driver.DLog
-import com.tube.driver.domain.entity.LatLng
+import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 class MapEventProvider :
     MapView.MapViewEventListener,
-    MapView.CurrentLocationEventListener {
+    MapView.CurrentLocationEventListener,
+    MapView.POIItemEventListener {
 
     interface MapEventListener {
         fun onMapViewInitialized(mapView: MapView)
-        fun onFirstCurrentLocation(latLng: LatLng)
+        fun onFirstCurrentLocation(mapPoint: MapPoint)
+        fun onMarkerSelected(selectedPoint: MapPoint)
     }
 
     private var firstLocation = false
@@ -28,37 +30,21 @@ class MapEventProvider :
         }
     }
 
-    override fun onMapViewCenterPointMoved(mapView: MapView?, mapPoint: MapPoint?) {
+    override fun onMapViewCenterPointMoved(mapView: MapView?, mapPoint: MapPoint?) {}
 
-    }
+    override fun onMapViewZoomLevelChanged(mapView: MapView?, p1: Int) {}
 
-    override fun onMapViewZoomLevelChanged(mapView: MapView?, p1: Int) {
+    override fun onMapViewSingleTapped(mapView: MapView?, mapPoint: MapPoint?) {}
 
-    }
+    override fun onMapViewDoubleTapped(mapView: MapView?, mapPoint: MapPoint?) {}
 
-    override fun onMapViewSingleTapped(mapView: MapView?, mapPoint: MapPoint?) {
+    override fun onMapViewLongPressed(mapView: MapView?, mapPoint: MapPoint?) {}
 
-    }
+    override fun onMapViewDragStarted(mapView: MapView?, mapPoint: MapPoint?) {}
 
-    override fun onMapViewDoubleTapped(mapView: MapView?, mapPoint: MapPoint?) {
+    override fun onMapViewDragEnded(mapView: MapView?, mapPoint: MapPoint?) {}
 
-    }
-
-    override fun onMapViewLongPressed(mapView: MapView?, mapPoint: MapPoint?) {
-
-    }
-
-    override fun onMapViewDragStarted(mapView: MapView?, mapPoint: MapPoint?) {
-
-    }
-
-    override fun onMapViewDragEnded(mapView: MapView?, mapPoint: MapPoint?) {
-
-    }
-
-    override fun onMapViewMoveFinished(mapView: MapView?, mapPoint: MapPoint?) {
-
-    }
+    override fun onMapViewMoveFinished(mapView: MapView?, mapPoint: MapPoint?) {}
 
     override fun onCurrentLocationUpdate(
         mapView: MapView?,
@@ -68,27 +54,35 @@ class MapEventProvider :
         currentLocation?.mapPointGeoCoord?.let { mapPointGeo ->
             if (!firstLocation) {
                 firstLocation = true
-                mapView?.setMapCenterPoint(currentLocation, false)
-
-                val latLng = LatLng(mapPointGeo.latitude, mapPointGeo.longitude)
-                mapEventListener?.onFirstCurrentLocation(latLng)
+                mapEventListener?.onFirstCurrentLocation(currentLocation)
             }
 
             logCurrentLocation(mapPointGeo, accuracyInMeters)
         }
     }
 
-    override fun onCurrentLocationDeviceHeadingUpdate(mapView: MapView?, p1: Float) {
+    override fun onCurrentLocationDeviceHeadingUpdate(mapView: MapView?, p1: Float) {}
 
+    override fun onCurrentLocationUpdateFailed(mapView: MapView?) {}
+
+    override fun onCurrentLocationUpdateCancelled(mapView: MapView?) {}
+
+    override fun onPOIItemSelected(mapView: MapView?, mapItem: MapPOIItem?) {
+        val selectedMarkerPoint = mapItem?.mapPoint
+        if (selectedMarkerPoint != null) {
+            mapEventListener?.onMarkerSelected(selectedMarkerPoint)
+        }
     }
 
-    override fun onCurrentLocationUpdateFailed(mapView: MapView?) {
+    override fun onCalloutBalloonOfPOIItemTouched(mapView: MapView?, mapItem: MapPOIItem?) {}
 
-    }
+    override fun onCalloutBalloonOfPOIItemTouched(
+        mapView: MapView?,
+        mapItem: MapPOIItem?,
+        p2: MapPOIItem.CalloutBalloonButtonType?
+    ) {}
 
-    override fun onCurrentLocationUpdateCancelled(mapView: MapView?) {
-
-    }
+    override fun onDraggablePOIItemMoved(mapView: MapView?, mapItem: MapPOIItem?, mapPoint: MapPoint?) {}
 
     private fun logCurrentLocation(
         mapPointGeo: MapPoint.GeoCoordinate,

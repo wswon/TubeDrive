@@ -144,4 +144,12 @@ class MapMarkerManager(
     fun clearAllMarker() {
         mapView.removeAllPOIItems()
     }
+
+    fun setSelectedMarkerById(id: String) {
+        val marker = mapView.poiItems.find { it.tag == id.toInt() }
+        if (marker != null) {
+            mapView.selectPOIItem(marker, true)
+            mapView.setMapCenterPoint(marker.mapPoint, true)
+        }
+    }
 }

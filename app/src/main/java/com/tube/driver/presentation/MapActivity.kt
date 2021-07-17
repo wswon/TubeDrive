@@ -76,6 +76,11 @@ class MapActivity : AppCompatActivity() {
                 viewModel.loadMore()
             }
 
+            selectedPlaceView.root.setOnClickListener {
+                val selectedPlaceId = viewModel.getSelectedPlaceId()
+                mapMarkerManager.setSelectedMarkerById(selectedPlaceId)
+            }
+
             selectedPlaceView.callButton.setOnClickListener {
                 val phoneNumber = viewModel.getSelectedPlacePhoneNumber()
                 if (phoneNumber.isNotEmpty()) {
@@ -162,7 +167,6 @@ class MapActivity : AppCompatActivity() {
 
     private fun setSelectedPlaceInfo(selectedPlaceItem: PlaceItem.Item) {
         binding.selectedPlaceView.run {
-            root.isVisible = true
             name.text = selectedPlaceItem.name
             subCategory.text =
                 if (selectedPlaceItem.subCategory.isNotEmpty()) selectedPlaceItem.subCategory else selectedPlaceItem.category

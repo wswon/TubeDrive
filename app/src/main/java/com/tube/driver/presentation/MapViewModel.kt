@@ -119,6 +119,9 @@ class MapViewModel @Inject constructor(
         super.onCleared()
     }
 
+    fun getSelectedPlaceId(): String {
+        return selectedPlaceItem.value?.id.orEmpty()
+    }
     fun getSelectedPlaceUrl(): String {
         return selectedPlaceItem.value?.placeUrl.orEmpty()
     }

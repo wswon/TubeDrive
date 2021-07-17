@@ -12,6 +12,7 @@ class PlaceMapper {
                 id = id,
                 name = placeName,
                 distance = getDisplayDistance(distance),
+                placeUrl = placeUrl,
                 phoneNumber = phone,
                 addressName = if (roadAddressName.isNotEmpty()) roadAddressName else addressName,
                 category = category.middleCategory,

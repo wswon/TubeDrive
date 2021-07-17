@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import com.tube.driver.DLog
 import com.tube.driver.R
 import com.tube.driver.domain.entity.LatLng
 import com.tube.driver.domain.entity.MapPoints
@@ -22,6 +23,7 @@ class MapMarkerManager(
     interface EventListener {
         fun onFirstCurrentLocation(latLng: LatLng)
         fun onCurrentLatLngUpdate(currentLatLng: LatLng)
+        fun onSelectedMarker(markerId: Int)
     }
 
     private var eventListener: EventListener? = null
@@ -49,8 +51,9 @@ class MapMarkerManager(
                     eventListener?.onCurrentLatLngUpdate(currentLocationPoint.mapPointGeoCoord.toLatLng())
                 }
 
-                override fun onMarkerSelected(selectedPoint: MapPoint) {
-                    mapView.setMapCenterPoint(selectedPoint, true)
+                override fun onMarkerSelected(selectedMapItem: MapPOIItem) {
+                    mapView.setMapCenterPoint(selectedMapItem.mapPoint, true)
+                    eventListener?.onSelectedMarker(selectedMapItem.tag)
                 }
             }
         )
@@ -59,13 +62,21 @@ class MapMarkerManager(
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun created() {
         connectMapEventListener()
-        mapView.currentLocationTrackingMode =
-            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
+
+        PermissionManager.checkLocationPermissions(lifecycleOwner)
+            .subscribe({
+                mapView.currentLocationTrackingMode =
+                    MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
+            }, {
+                DLog.e("$it")
+            })
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun detachSelf() {
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+        if (PermissionManager.isLocationPermissionGranted(lifecycleOwner)) {
+            mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+        }
         mapView.setShowCurrentLocationMarker(false)
 
         lifecycleOwner.lifecycle.removeObserver(this)

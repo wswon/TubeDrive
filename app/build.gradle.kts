@@ -68,10 +68,12 @@ dependencies {
     implementation(Deps.Network.rxAdapter)
 
     implementation(Deps.Hilt.hilt)
+    implementation("androidx.browser:browser:1.2.0")
     kapt(Deps.Hilt.hiltCompiler)
 
     testImplementation(Deps.Test.archCore)
     testImplementation(Deps.Test.mockk)
 
+    implementation("io.github.ParkSangGwon:tedpermission:2.3.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 }

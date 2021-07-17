@@ -1,12 +1,15 @@
 package com.tube.driver.presentation
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.tube.driver.DLog
 import com.tube.driver.databinding.ActivityMapBinding
 import com.tube.driver.domain.entity.LatLng
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,6 +57,10 @@ class MapActivity : AppCompatActivity() {
                 override fun onCurrentLatLngUpdate(currentLatLng: LatLng) {
                     viewModel.setCurrentLatLng(currentLatLng)
                 }
+
+                override fun onSelectedMarker(markerId: Int) {
+                    viewModel.setSelectedMarkerId(markerId)
+                }
             })
         }
 
@@ -71,10 +78,30 @@ class MapActivity : AppCompatActivity() {
             }
 
             BottomSheetBehavior.from(bottomSheet)
-                .addBottomSheetCallback(createBottomSheetCallback(bottomSheetState))
+                .addBottomSheetCallback(createBottomSheetCallback())
 
             categoryLayout.setChangeCategoryListener { categoryType ->
                 viewModel.changeCategory(categoryType)
+            }
+
+            selectedPlaceView.callButton.setOnClickListener {
+                PermissionManager.checkCallPhonePermissions(this@MapActivity)
+                    .subscribe({
+                        val phoneNumber = viewModel.getSelectedPlacePhoneNumber()
+                        if (phoneNumber.isNotEmpty()) {
+                            startActivity(Intent(Intent.ACTION_CALL, Uri.parse("tel:$phoneNumber")))
+                        }
+                    }, {
+                        DLog.e("$it")
+                    })
+            }
+            selectedPlaceView.webSiteButton.setOnClickListener {
+                val url = viewModel.getSelectedPlaceUrl()
+                if (url.startsWith("http://") || url.startsWith("https://")) {
+                    CustomTabsIntent.Builder()
+                        .build()
+                        .launchUrl(this@MapActivity, Uri.parse(url))
+                }
             }
         }
     }
@@ -90,29 +117,28 @@ class MapActivity : AppCompatActivity() {
             hasNextPage.observe(this@MapActivity, { hasNextPage ->
 
             })
+
+            selectedPlaceItem.observe(this@MapActivity, { selectedPlaceItem ->
+                setSelectedPlaceInfo(selectedPlaceItem)
+            })
         }
     }
 
-    private fun createBottomSheetCallback(text: TextView): BottomSheetBehavior.BottomSheetCallback =
+    private fun setSelectedPlaceInfo(selectedPlaceItem: PlaceItem.Item) {
+        binding.selectedPlaceView.run {
+            name.text = selectedPlaceItem.name
+            subCategory.text =
+                if (selectedPlaceItem.subCategory.isNotEmpty()) selectedPlaceItem.subCategory else selectedPlaceItem.category
+            address.text = selectedPlaceItem.addressName
+            distance.text = selectedPlaceItem.distance
+        }
+    }
+
+    private fun createBottomSheetCallback(): BottomSheetBehavior.BottomSheetCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-
-                binding.selectedPlaceView.root.isVisible = newState == BottomSheetBehavior.STATE_COLLAPSED
-
-                text.text = when (newState) {
-                    BottomSheetBehavior.STATE_DRAGGING -> "STATE DRAGGING"
-                    BottomSheetBehavior.STATE_EXPANDED -> "STATE EXPANDED"
-                    BottomSheetBehavior.STATE_COLLAPSED -> "STATE COLLAPSED"
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        String.format(
-                            "STATE_HALF_EXPANDED\\nhalfExpandedRatio = %.2f",
-                            BottomSheetBehavior.from(bottomSheet).halfExpandedRatio
-                        )
-                    }
-                    else -> {
-                        text.text.toString()
-                    }
-                }
+                binding.selectedPlaceView.root.isVisible =
+                    newState == BottomSheetBehavior.STATE_COLLAPSED
             }
 
             override fun onSlide(

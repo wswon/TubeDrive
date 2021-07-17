@@ -37,6 +37,10 @@ class MapViewModel @Inject constructor(
 
     private var currentPage: Int = 1
 
+    private val _selectedPlaceItem = MutableLiveData<PlaceItem.Item>()
+    val selectedPlaceItem: LiveData<PlaceItem.Item>
+        get() = _selectedPlaceItem
+
     fun search(mapPoints: MapPoints) {
         latestMapPoints = mapPoints
 
@@ -76,8 +80,8 @@ class MapViewModel @Inject constructor(
     fun changeCategory(categoryType: CategoryType) {
         selectedCategoryType = categoryType
     }
-
     private var currentLatLng: LatLng? = null
+
     fun setCurrentLatLng(currentLatLng: LatLng) {
         this.currentLatLng = currentLatLng
     }
@@ -104,5 +108,17 @@ class MapViewModel @Inject constructor(
     override fun onCleared() {
         compositeDisposable.clear()
         super.onCleared()
+    }
+
+    fun getSelectedPlaceUrl(): String {
+        return selectedPlaceItem.value?.placeUrl.orEmpty()
+    }
+
+    fun getSelectedPlacePhoneNumber(): String {
+        return selectedPlaceItem.value?.phoneNumber.orEmpty()
+    }
+
+    fun setSelectedMarkerId(markerId: Int) {
+        _selectedPlaceItem.value = placeList.value?.first { it.id.toInt() == markerId }
     }
 }

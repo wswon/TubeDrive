@@ -15,7 +15,7 @@ class MapEventProvider(
     interface MapEventListener {
         fun onMapViewInitialized(mapView: MapView)
         fun onFirstCurrentLocation(mapPoint: MapPoint)
-        fun onMarkerSelected(selectedPoint: MapPoint)
+        fun onMarkerSelected(selectedMapItem: MapPOIItem)
         fun onCurrentLocationUpdate(currentLocationPoint: MapPoint)
     }
 
@@ -67,9 +67,8 @@ class MapEventProvider(
     override fun onCurrentLocationUpdateCancelled(mapView: MapView?) {}
 
     override fun onPOIItemSelected(mapView: MapView?, mapItem: MapPOIItem?) {
-        val selectedMarkerPoint = mapItem?.mapPoint
-        if (selectedMarkerPoint != null) {
-            mapEventListener.onMarkerSelected(selectedMarkerPoint)
+        if (mapItem != null) {
+            mapEventListener.onMarkerSelected(mapItem)
         }
     }
 

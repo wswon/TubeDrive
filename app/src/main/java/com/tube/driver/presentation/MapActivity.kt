@@ -77,10 +77,15 @@ class MapActivity : AppCompatActivity() {
             }
 
             currentLocationButton.setOnClickListener {
-                val currentLatLng = viewModel.getCurrentLatLng()
-                if (currentLatLng != null) {
-                    mapMarkerManager.moveLatLng(currentLatLng)
-                }
+                PermissionManager.checkLocationPermissions(this@MapActivity)
+                    .subscribe({
+                        val currentLatLng = viewModel.getCurrentLatLng()
+                        if (currentLatLng != null) {
+                            mapMarkerManager.moveLatLng(currentLatLng)
+                        }
+                    }, {
+                        DLog.e("$it")
+                    })
             }
 
             selectedPlaceView.root.setOnClickListener {

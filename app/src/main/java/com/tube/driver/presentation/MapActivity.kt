@@ -10,6 +10,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tube.driver.DLog
+import com.tube.driver.ViewUtil
 import com.tube.driver.databinding.ActivityMapBinding
 import com.tube.driver.domain.entity.LatLng
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +44,7 @@ class MapActivity : AppCompatActivity() {
         setupView()
         setupViewModel()
         setMarkerManager()
+        ViewUtil.setStatusBarTransparent(this)
     }
 
     private fun setMarkerManager() {

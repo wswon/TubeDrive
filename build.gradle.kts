@@ -8,6 +8,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinVersion}")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.7.1")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.hiltVersion}")
+        classpath("com.google.gms:google-services:4.3.8")
     }
 }
 

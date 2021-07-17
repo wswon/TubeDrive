@@ -57,7 +57,7 @@ class MapActivity : AppCompatActivity() {
 
             bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet).apply {
                 addBottomSheetCallback(createBottomSheetCallback())
-                isDraggable = true
+                isDraggable = false
             }
 
             categoryLayout.setChangeCategoryListener { categoryType ->
@@ -73,12 +73,14 @@ class MapActivity : AppCompatActivity() {
             }
 
             loadMoreButton.root.setOnClickListener {
+                error("firebas test")
                 viewModel.loadMore()
             }
 
             currentLocationButton.setOnClickListener {
                 PermissionManager.checkLocationPermissions(this@MapActivity)
                     .subscribe({
+                        mapMarkerManager.enableTrackingMode()
                         val currentLatLng = viewModel.getCurrentLatLng()
                         if (currentLatLng != null) {
                             mapMarkerManager.moveLatLng(currentLatLng)

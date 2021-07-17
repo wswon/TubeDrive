@@ -69,39 +69,44 @@ class MapMarkerManager(
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun created() {
         connectMapEventListener()
-        enableTrackingMode()
+
+        PermissionManager.checkLocationPermissions(lifecycleOwner)
+            .subscribe({
+                enableTrackingMode()
+            }, {
+                DLog.e("$it")
+            })
+
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
         if (!isTrackingModeEnabled() && PermissionManager.isLocationPermissionGranted(lifecycleOwner)) {
-            mapView.currentLocationTrackingMode =
-                MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
+            enableTrackingMode()
         }
-    }
-
-    private fun isTrackingModeEnabled() =
-        mapView.currentLocationTrackingMode != MapView.CurrentLocationTrackingMode.TrackingModeOff
-
-    private fun enableTrackingMode() {
-        PermissionManager.checkLocationPermissions(lifecycleOwner)
-            .subscribe({
-                mapView.currentLocationTrackingMode =
-                    MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
-            }, {
-                DLog.e("$it")
-            })
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun detachSelf() {
         if (PermissionManager.isLocationPermissionGranted(lifecycleOwner)) {
-            mapView.currentLocationTrackingMode =
-                MapView.CurrentLocationTrackingMode.TrackingModeOff
+            disableTrackingMode()
         }
         mapView.setShowCurrentLocationMarker(false)
 
         lifecycleOwner.lifecycle.removeObserver(this)
+    }
+
+    private fun isTrackingModeEnabled() =
+        mapView.currentLocationTrackingMode != MapView.CurrentLocationTrackingMode.TrackingModeOff
+
+    fun enableTrackingMode() {
+        mapView.currentLocationTrackingMode =
+            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
+    }
+
+    private fun disableTrackingMode() {
+        mapView.currentLocationTrackingMode =
+            MapView.CurrentLocationTrackingMode.TrackingModeOff
     }
 
     private fun connectMapEventListener() {

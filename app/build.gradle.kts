@@ -48,6 +48,13 @@ dependencies {
     implementation(files("libs/libDaumMapAndroid.jar"))
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlinVersion}")
+
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:28.2.1"))
+
+    // Declare the dependencies for the Crashlytics and Analytics libraries
+    // When using the BoM, you don"t specify versions in Firebase library dependencies
+    implementation(Deps.Firebase.analytics)
     implementation(Deps.Firebase.crashlytics)
 
     implementation(Deps.Android.X.core)
@@ -56,6 +63,7 @@ dependencies {
     implementation(Deps.Android.X.appCompat)
     implementation(Deps.Android.X.constraintLayout)
     implementation(Deps.Android.X.recyclerView)
+    implementation(Deps.Android.X.browser)
 
     implementation(Deps.Android.material)
 
@@ -68,12 +76,11 @@ dependencies {
     implementation(Deps.Network.rxAdapter)
 
     implementation(Deps.Hilt.hilt)
-    implementation("androidx.browser:browser:1.2.0")
     kapt(Deps.Hilt.hiltCompiler)
 
     testImplementation(Deps.Test.archCore)
     testImplementation(Deps.Test.mockk)
 
-    implementation("io.github.ParkSangGwon:tedpermission:2.3.0")
+    implementation(Deps.permission)
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 }

@@ -7,12 +7,14 @@ object Deps {
             const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompatVersion}"
             const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayoutVersion}"
             const val recyclerView = "androidx.recyclerview:recyclerview:${Versions.recyclerViewVersion}"
+            const val browser = "androidx.browser:browser:${Versions.browserVersion}"
         }
         const val material = "com.google.android.material:material:${Versions.materialVersion}"
     }
 
     object Firebase {
-        const val crashlytics = "com.google.firebase:firebase-crashlytics:${Versions.Firebase.crashlyticsVersion}"
+        const val analytics = "com.google.firebase:firebase-analytics-ktx"
+        const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
     }
 
     object Kakao {
@@ -29,6 +31,7 @@ object Deps {
         const val rxAdapter = "com.squareup.retrofit2:adapter-rxjava3:${Versions.rxAdapterVersion}"
     }
 
+    const val permission = "io.github.ParkSangGwon:tedpermission:${Versions.tedPermissionVersion}"
     const val glide = "com.github.bumptech.glide:glide:${Versions.glideVersion}"
 
     object Test {

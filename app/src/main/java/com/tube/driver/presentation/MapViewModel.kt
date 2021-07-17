@@ -128,4 +128,8 @@ class MapViewModel @Inject constructor(
     fun setSelectedMarkerId(markerId: Int) {
         _selectedPlaceItem.value = placeList.value?.first { it.id.toInt() == markerId }
     }
+
+    fun showRefreshButton() {
+        _isRefreshButtonVisible.value = true
+    }
 }

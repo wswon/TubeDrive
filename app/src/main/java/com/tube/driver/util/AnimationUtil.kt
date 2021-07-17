@@ -11,7 +11,7 @@ object AnimationUtil {
                 SpringForce().setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY)
                     .setStiffness(SpringForce.STIFFNESS_LOW)
             )
-            .setStartValue(0.0f)
+            .setStartValue(view.alpha)
             .animateToFinalPosition(1.0f)
     }
 
@@ -21,7 +21,7 @@ object AnimationUtil {
                 SpringForce().setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY)
                     .setStiffness(SpringForce.STIFFNESS_LOW)
             )
-            .setStartValue(1.0f)
+            .setStartValue(view.alpha)
             .animateToFinalPosition(0.0f)
     }
 }

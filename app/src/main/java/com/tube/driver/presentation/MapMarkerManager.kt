@@ -25,6 +25,7 @@ class MapMarkerManager(
         fun onFirstCurrentLocation(latLng: LatLng)
         fun onCurrentLatLngUpdate(currentLatLng: LatLng)
         fun onSelectedMarker(markerId: Int)
+        fun onMapViewDragEnded()
     }
 
     private var eventListener: EventListener? = null
@@ -55,6 +56,10 @@ class MapMarkerManager(
                 override fun onMarkerSelected(selectedMapItem: MapPOIItem) {
                     mapView.setMapCenterPoint(selectedMapItem.mapPoint, true)
                     eventListener?.onSelectedMarker(selectedMapItem.tag)
+                }
+
+                override fun onMapViewDragEnded() {
+                    eventListener?.onMapViewDragEnded()
                 }
             }
         )

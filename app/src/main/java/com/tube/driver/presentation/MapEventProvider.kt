@@ -17,6 +17,7 @@ class MapEventProvider(
         fun onFirstCurrentLocation(mapPoint: MapPoint)
         fun onMarkerSelected(selectedMapItem: MapPOIItem)
         fun onCurrentLocationUpdate(currentLocationPoint: MapPoint)
+        fun onMapViewDragEnded()
     }
 
     private var firstLocation = false
@@ -39,11 +40,11 @@ class MapEventProvider(
 
     override fun onMapViewDragStarted(mapView: MapView?, mapPoint: MapPoint?) {}
 
-    override fun onMapViewDragEnded(mapView: MapView?, mapPoint: MapPoint?) {}
-
-    override fun onMapViewMoveFinished(mapView: MapView?, mapPoint: MapPoint?) {
-
+    override fun onMapViewDragEnded(mapView: MapView?, mapPoint: MapPoint?) {
+        mapEventListener.onMapViewDragEnded()
     }
+
+    override fun onMapViewMoveFinished(mapView: MapView?, mapPoint: MapPoint?) {}
 
     override fun onCurrentLocationUpdate(
         mapView: MapView?,

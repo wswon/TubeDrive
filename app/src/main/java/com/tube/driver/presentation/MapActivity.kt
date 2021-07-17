@@ -127,6 +127,10 @@ class MapActivity : AppCompatActivity() {
                 override fun onSelectedMarker(markerId: Int) {
                     viewModel.setSelectedMarkerId(markerId)
                 }
+
+                override fun onMapViewDragEnded() {
+                    viewModel.showRefreshButton()
+                }
             })
         }
 

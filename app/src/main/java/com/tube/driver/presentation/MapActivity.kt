@@ -30,6 +30,8 @@ class MapActivity : AppCompatActivity() {
 
     private lateinit var mapMarkerManager: MapMarkerManager
 
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
+
     private val placeAdapter: PlaceAdapter by lazy {
         PlaceAdapter(
             clickPlaceItem = {
@@ -53,8 +55,10 @@ class MapActivity : AppCompatActivity() {
         with(binding) {
             placeListView.adapter = placeAdapter
 
-            BottomSheetBehavior.from(bottomSheet)
-                .addBottomSheetCallback(createBottomSheetCallback())
+            bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet).apply {
+                addBottomSheetCallback(createBottomSheetCallback())
+                isDraggable = true
+            }
 
             categoryLayout.setChangeCategoryListener { categoryType ->
                 viewModel.changeCategory(categoryType)
@@ -91,6 +95,8 @@ class MapActivity : AppCompatActivity() {
                 placeAdapter.submitList(placeList)
 
                 placeList.forEach(mapMarkerManager::addMarker)
+
+                bottomSheetBehavior.isDraggable = placeList.isNotEmpty()
             })
 
             hasNextPage.observe(this@MapActivity, { hasNextPage ->

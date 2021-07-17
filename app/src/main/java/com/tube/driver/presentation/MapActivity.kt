@@ -111,7 +111,9 @@ class MapActivity : AppCompatActivity() {
             placeList.observe(this@MapActivity, { placeList ->
                 placeAdapter.submitList(placeList)
 
-                placeList.forEach(mapMarkerManager::addMarker)
+                placeList.forEachIndexed { index, item ->
+                    mapMarkerManager.addMarker(item, index == 0)
+                }
             })
 
             hasNextPage.observe(this@MapActivity, { hasNextPage ->

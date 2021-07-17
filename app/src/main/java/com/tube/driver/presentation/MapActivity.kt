@@ -33,8 +33,9 @@ class MapActivity : AppCompatActivity() {
 
     private val placeAdapter: PlaceAdapter by lazy {
         PlaceAdapter(
-            clickPlaceItem = {
-
+            clickPlaceItem = { item ->
+                mapMarkerManager.setSelectedMarkerById(item.id)
+                viewModel.setSelectedMarkerId(item.id.toInt())
             }
         )
     }

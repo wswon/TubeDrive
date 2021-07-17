@@ -14,5 +14,10 @@ sealed interface PlaceItem {
         val subCategory: String,
         val latLng: LatLng,
         var isSelected: Boolean = false
-    ) : PlaceItem
+    ) : PlaceItem {
+        companion object {
+            val EMPTY_ITEM =
+                Item("", "", "", "", "", "", "", LatLng(-1.0, -1.0))
+        }
+    }
 }

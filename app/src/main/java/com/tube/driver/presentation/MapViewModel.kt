@@ -110,6 +110,7 @@ class MapViewModel @Inject constructor(
 
     private fun clearPlaceList() {
         _placeList.value = emptyList()
+        _selectedPlaceItem.value = PlaceItem.Item.EMPTY_ITEM
     }
 
     override fun onCleared() {

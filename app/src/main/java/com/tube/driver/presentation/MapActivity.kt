@@ -161,6 +161,9 @@ class MapActivity : AppCompatActivity() {
             subCategory.text =
                 if (selectedPlaceItem.subCategory.isNotEmpty()) selectedPlaceItem.subCategory else selectedPlaceItem.category
             address.text = selectedPlaceItem.addressName
+
+            callButton.isVisible = selectedPlaceItem.phoneNumber.isNotEmpty()
+            webSiteButton.isVisible = selectedPlaceItem.placeUrl.isNotEmpty()
         }
     }
 

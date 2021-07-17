@@ -69,7 +69,21 @@ class MapMarkerManager(
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun created() {
         connectMapEventListener()
+        enableTrackingMode()
+    }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun start() {
+        if (!isTrackingModeEnabled() && PermissionManager.isLocationPermissionGranted(lifecycleOwner)) {
+            mapView.currentLocationTrackingMode =
+                MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
+        }
+    }
+
+    private fun isTrackingModeEnabled() =
+        mapView.currentLocationTrackingMode != MapView.CurrentLocationTrackingMode.TrackingModeOff
+
+    private fun enableTrackingMode() {
         PermissionManager.checkLocationPermissions(lifecycleOwner)
             .subscribe({
                 mapView.currentLocationTrackingMode =
@@ -82,7 +96,8 @@ class MapMarkerManager(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun detachSelf() {
         if (PermissionManager.isLocationPermissionGranted(lifecycleOwner)) {
-            mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+            mapView.currentLocationTrackingMode =
+                MapView.CurrentLocationTrackingMode.TrackingModeOff
         }
         mapView.setShowCurrentLocationMarker(false)
 
@@ -155,6 +170,13 @@ class MapMarkerManager(
     }
 
     fun moveLatLng(latLng: LatLng) {
-        mapView.moveCamera(CameraUpdateFactory.newMapPoint(MapPoint.mapPointWithGeoCoord(latLng.latitude, latLng.longitude)))
+        mapView.moveCamera(
+            CameraUpdateFactory.newMapPoint(
+                MapPoint.mapPointWithGeoCoord(
+                    latLng.latitude,
+                    latLng.longitude
+                )
+            )
+        )
     }
 }

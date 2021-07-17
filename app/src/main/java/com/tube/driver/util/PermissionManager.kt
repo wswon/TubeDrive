@@ -10,7 +10,7 @@ object PermissionManager {
     fun checkCallPhonePermissions(context: Context): Completable {
         return Completable.create { completableEmitter ->
             TedPermission.with(context)
-                .setPermissionListener(object :PermissionListener {
+                .setPermissionListener(object : PermissionListener {
                     override fun onPermissionGranted() {
                         completableEmitter.onComplete()
                     }
@@ -28,7 +28,7 @@ object PermissionManager {
     fun checkLocationPermissions(context: Context): Completable {
         return Completable.create { completableEmitter ->
             TedPermission.with(context)
-                .setPermissionListener(object :PermissionListener {
+                .setPermissionListener(object : PermissionListener {
                     override fun onPermissionGranted() {
                         completableEmitter.onComplete()
                     }

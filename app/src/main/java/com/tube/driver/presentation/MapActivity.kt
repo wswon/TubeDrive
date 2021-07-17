@@ -73,7 +73,6 @@ class MapActivity : AppCompatActivity() {
             }
 
             loadMoreButton.root.setOnClickListener {
-                error("firebas test")
                 viewModel.loadMore()
             }
 

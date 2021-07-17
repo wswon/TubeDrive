@@ -1,11 +1,9 @@
 package com.tube.driver.domain
 
-import com.tube.driver.domain.entity.LatLng
 import com.tube.driver.domain.entity.MapPoints
 
 data class GetPlaceListRequest(
     val categoryCode: String,
-    val currentLatLng: LatLng,
     val mapPoints: MapPoints,
     val page: Int
 ) {

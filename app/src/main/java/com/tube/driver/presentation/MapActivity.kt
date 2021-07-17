@@ -111,9 +111,7 @@ class MapActivity : AppCompatActivity() {
             placeList.observe(this@MapActivity, { placeList ->
                 placeAdapter.submitList(placeList)
 
-                placeList.forEachIndexed { index, item ->
-                    mapMarkerManager.addMarker(item, index == 0)
-                }
+                placeList.forEach(mapMarkerManager::addMarker)
             })
 
             hasNextPage.observe(this@MapActivity, { hasNextPage ->
@@ -128,6 +126,7 @@ class MapActivity : AppCompatActivity() {
 
     private fun setSelectedPlaceInfo(selectedPlaceItem: PlaceItem.Item) {
         binding.selectedPlaceView.run {
+            root.isVisible = true
             name.text = selectedPlaceItem.name
             subCategory.text =
                 if (selectedPlaceItem.subCategory.isNotEmpty()) selectedPlaceItem.subCategory else selectedPlaceItem.category

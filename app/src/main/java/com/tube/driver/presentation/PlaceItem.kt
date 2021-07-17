@@ -12,6 +12,7 @@ sealed interface PlaceItem {
         val addressName: String,
         val category: String,
         val subCategory: String,
-        val latLng: LatLng
+        val latLng: LatLng,
+        var isSelected: Boolean = false
     ) : PlaceItem
 }

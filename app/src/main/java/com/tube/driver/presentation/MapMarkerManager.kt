@@ -100,7 +100,7 @@ class MapMarkerManager(
         )
     }
 
-    fun addMarker(markerItem: PlaceItem.Item, isSelected: Boolean = false) {
+    fun addMarker(markerItem: PlaceItem.Item) {
         val marker = MapPOIItem().apply {
             itemName = markerItem.name
             tag = markerItem.id.toInt()
@@ -122,7 +122,7 @@ class MapMarkerManager(
         }
 
         mapView.addPOIItem(marker)
-        if (isSelected) {
+        if (markerItem.isSelected) {
             mapView.selectPOIItem(marker, true)
         }
     }
@@ -130,7 +130,8 @@ class MapMarkerManager(
     fun getCurrentMapPoints(): MapPoints {
         return MapPoints(
             mapView.mapPointBounds.bottomLeft.mapPointGeoCoord.toLatLng(),
-            mapView.mapPointBounds.topRight.mapPointGeoCoord.toLatLng()
+            mapView.mapPointBounds.topRight.mapPointGeoCoord.toLatLng(),
+            mapView.mapPointBounds.center.mapPointGeoCoord.toLatLng()
         )
     }
 

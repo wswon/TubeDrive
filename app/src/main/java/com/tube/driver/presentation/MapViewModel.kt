@@ -46,28 +46,27 @@ class MapViewModel @Inject constructor(
 
         clearPlaceList()
 
-        val currentLatLng = currentLatLng
-
-        if (currentLatLng != null) {
-            getSearchPlace(currentLatLng, mapPoints, 1)
-                .subscribe({ (placeList, hasNextPage) ->
+        getSearchPlace(mapPoints, 1)
+            .subscribe({ (placeList, hasNextPage) ->
+                if (placeList.isNotEmpty()) {
+                    placeList[0].isSelected = true
+                    _selectedPlaceItem.value = placeList[0]
                     _placeList.value = placeList
-                    _hasNextPage.value = hasNextPage
-                }, {
-                    DLog.e("$it")
-                })
-        }
+                }
+
+                _hasNextPage.value = hasNextPage
+            }, {
+                DLog.e("$it")
+            })
     }
 
     fun loadMore() {
-        val currentLatLng = currentLatLng
         val mapPoints = latestMapPoints
         val hasNextPage = hasNextPage.value
-        if (currentLatLng != null
-            && mapPoints != null
+        if (mapPoints != null
             && hasNextPage == true
         ) {
-            getSearchPlace(currentLatLng, mapPoints, ++currentPage)
+            getSearchPlace(mapPoints, ++currentPage)
                 .subscribe({ (placeList, hasNextPage) ->
                     _placeList.value = _placeList.value.orEmpty() + placeList
                     _hasNextPage.value = hasNextPage
@@ -80,17 +79,17 @@ class MapViewModel @Inject constructor(
     fun changeCategory(categoryType: CategoryType) {
         selectedCategoryType = categoryType
     }
+
     private var currentLatLng: LatLng? = null
 
     fun setCurrentLatLng(currentLatLng: LatLng) {
         this.currentLatLng = currentLatLng
     }
 
-    private fun getSearchPlace(currentLatLng: LatLng, mapPoints: MapPoints, page: Int) =
+    private fun getSearchPlace(mapPoints: MapPoints, page: Int) =
         getPlaceListByCategory(
             GetPlaceListRequest(
                 selectedCategoryType.code,
-                currentLatLng,
                 mapPoints,
                 page
             )

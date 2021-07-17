@@ -1,6 +1,6 @@
 package com.tube.driver.presentation
 
-import com.tube.driver.DLog
+import com.tube.driver.util.DLog
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -41,7 +41,9 @@ class MapEventProvider(
 
     override fun onMapViewDragEnded(mapView: MapView?, mapPoint: MapPoint?) {}
 
-    override fun onMapViewMoveFinished(mapView: MapView?, mapPoint: MapPoint?) {}
+    override fun onMapViewMoveFinished(mapView: MapView?, mapPoint: MapPoint?) {
+
+    }
 
     override fun onCurrentLocationUpdate(
         mapView: MapView?,

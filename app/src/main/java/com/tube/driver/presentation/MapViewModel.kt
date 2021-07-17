@@ -3,12 +3,12 @@ package com.tube.driver.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.tube.driver.DLog
 import com.tube.driver.domain.GetPlaceListRequest
 import com.tube.driver.domain.entity.LatLng
 import com.tube.driver.domain.entity.MapPoints
 import com.tube.driver.domain.usecase.GetPlaceListByCategory
 import com.tube.driver.presentation.mapper.PlaceMapper
+import com.tube.driver.util.DLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -31,15 +31,19 @@ class MapViewModel @Inject constructor(
     val hasNextPage: LiveData<Boolean>
         get() = _hasNextPage
 
-    private var selectedCategoryType: CategoryType = CategoryType.HOSPITAL
-    private var latestMapPoints: MapPoints? = null
-
-
-    private var currentPage: Int = 1
-
     private val _selectedPlaceItem = MutableLiveData<PlaceItem.Item>()
     val selectedPlaceItem: LiveData<PlaceItem.Item>
         get() = _selectedPlaceItem
+
+    private val _isRefreshButtonVisible = MutableLiveData(false)
+    val isRefreshButtonVisible: LiveData<Boolean>
+        get() = _isRefreshButtonVisible
+
+    private var selectedCategoryType: CategoryType = CategoryType.HOSPITAL
+
+    private var latestMapPoints: MapPoints? = null
+
+    private var currentPage: Int = 1
 
     fun search(mapPoints: MapPoints) {
         latestMapPoints = mapPoints
@@ -77,7 +81,11 @@ class MapViewModel @Inject constructor(
     }
 
     fun changeCategory(categoryType: CategoryType) {
-        selectedCategoryType = categoryType
+        if (categoryType != selectedCategoryType) {
+            _isRefreshButtonVisible.value = true
+            _hasNextPage.value = false
+            selectedCategoryType = categoryType
+        }
     }
 
     private var currentLatLng: LatLng? = null

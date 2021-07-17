@@ -9,10 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.tube.driver.DLog
-import com.tube.driver.ViewUtil
 import com.tube.driver.databinding.ActivityMapBinding
 import com.tube.driver.domain.entity.LatLng
+import com.tube.driver.util.AnimationUtil
+import com.tube.driver.util.DLog
+import com.tube.driver.util.PermissionManager
+import com.tube.driver.util.ViewUtil
 import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.MapView
 import java.util.*
@@ -37,6 +39,7 @@ class MapActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ViewUtil.setStatusBarTransparent(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -44,7 +47,68 @@ class MapActivity : AppCompatActivity() {
         setupView()
         setupViewModel()
         setMarkerManager()
-        ViewUtil.setStatusBarTransparent(this)
+    }
+
+    private fun setupView() {
+        with(binding) {
+            placeListView.adapter = placeAdapter
+
+            BottomSheetBehavior.from(bottomSheet)
+                .addBottomSheetCallback(createBottomSheetCallback())
+
+            categoryLayout.setChangeCategoryListener { categoryType ->
+                viewModel.changeCategory(categoryType)
+            }
+
+            refreshButton.setOnClickListener {
+                AnimationUtil.fadeOut(it)
+
+                val mapPoints = mapMarkerManager.getCurrentMapPoints()
+                viewModel.search(mapPoints)
+                mapMarkerManager.clearAllMarker()
+            }
+
+            loadMoreButton.root.setOnClickListener {
+                viewModel.loadMore()
+            }
+
+            selectedPlaceView.callButton.setOnClickListener {
+                val phoneNumber = viewModel.getSelectedPlacePhoneNumber()
+                if (phoneNumber.isNotEmpty()) {
+                    callPhoneNumber(phoneNumber)
+                }
+            }
+
+            selectedPlaceView.webSiteButton.setOnClickListener {
+                openWebView(viewModel.getSelectedPlaceUrl())
+            }
+        }
+    }
+
+    private fun setupViewModel() {
+        with(viewModel) {
+            placeList.observe(this@MapActivity, { placeList ->
+                placeAdapter.submitList(placeList)
+
+                placeList.forEach(mapMarkerManager::addMarker)
+            })
+
+            hasNextPage.observe(this@MapActivity, { hasNextPage ->
+                binding.loadMoreButton.loadMoreText.alpha = if (hasNextPage) 1f else 0.3f
+            })
+
+            selectedPlaceItem.observe(this@MapActivity, { selectedPlaceItem ->
+                setSelectedPlaceInfo(selectedPlaceItem)
+            })
+
+            isRefreshButtonVisible.observe(this@MapActivity, { isVisible ->
+                if (isVisible) {
+                    AnimationUtil.fadeIn(binding.refreshButton)
+                } else {
+                    AnimationUtil.fadeOut(binding.refreshButton)
+                }
+            })
+        }
     }
 
     private fun setMarkerManager() {
@@ -69,64 +133,20 @@ class MapActivity : AppCompatActivity() {
         lifecycle.addObserver(mapMarkerManager)
     }
 
-    private fun setupView() {
-        with(binding) {
-            placeListView.adapter = placeAdapter
-
-            refreshButton.setOnClickListener {
-                val mapPoints = mapMarkerManager.getCurrentMapPoints()
-                viewModel.search(mapPoints)
-                mapMarkerManager.clearAllMarker()
-            }
-
-            BottomSheetBehavior.from(bottomSheet)
-                .addBottomSheetCallback(createBottomSheetCallback())
-
-            categoryLayout.setChangeCategoryListener { categoryType ->
-                viewModel.changeCategory(categoryType)
-            }
-
-            binding.loadMoreButton.root.setOnClickListener {
-                viewModel.loadMore()
-            }
-
-            selectedPlaceView.callButton.setOnClickListener {
-                PermissionManager.checkCallPhonePermissions(this@MapActivity)
-                    .subscribe({
-                        val phoneNumber = viewModel.getSelectedPlacePhoneNumber()
-                        if (phoneNumber.isNotEmpty()) {
-                            startActivity(Intent(Intent.ACTION_CALL, Uri.parse("tel:$phoneNumber")))
-                        }
-                    }, {
-                        DLog.e("$it")
-                    })
-            }
-            selectedPlaceView.webSiteButton.setOnClickListener {
-                val url = viewModel.getSelectedPlaceUrl()
-                if (url.startsWith("http://") || url.startsWith("https://")) {
-                    CustomTabsIntent.Builder()
-                        .build()
-                        .launchUrl(this@MapActivity, Uri.parse(url))
-                }
-            }
-        }
+    private fun callPhoneNumber(phoneNumber: String) {
+        PermissionManager.checkCallPhonePermissions(this@MapActivity)
+            .subscribe({
+                startActivity(Intent(Intent.ACTION_CALL, Uri.parse("tel:$phoneNumber")))
+            }, {
+                DLog.e("$it")
+            })
     }
 
-    private fun setupViewModel() {
-        with(viewModel) {
-            placeList.observe(this@MapActivity, { placeList ->
-                placeAdapter.submitList(placeList)
-
-                placeList.forEach(mapMarkerManager::addMarker)
-            })
-
-            hasNextPage.observe(this@MapActivity, { hasNextPage ->
-                binding.loadMoreButton.loadMoreText.alpha = if (hasNextPage) 1f else 0.3f
-            })
-
-            selectedPlaceItem.observe(this@MapActivity, { selectedPlaceItem ->
-                setSelectedPlaceInfo(selectedPlaceItem)
-            })
+    private fun openWebView(url: String) {
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            CustomTabsIntent.Builder()
+                .build()
+                .launchUrl(this@MapActivity, Uri.parse(url))
         }
     }
 

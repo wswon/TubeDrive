@@ -5,11 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import com.tube.driver.DLog
 import com.tube.driver.R
 import com.tube.driver.domain.entity.LatLng
 import com.tube.driver.domain.entity.MapPoints
 import com.tube.driver.presentation.mapper.toLatLng
+import com.tube.driver.util.DLog
+import com.tube.driver.util.PermissionManager
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPOIItem.ImageOffset
 import net.daum.mf.map.api.MapPoint
@@ -138,6 +139,4 @@ class MapMarkerManager(
     fun clearAllMarker() {
         mapView.removeAllPOIItems()
     }
-
-
 }

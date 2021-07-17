@@ -1,6 +1,7 @@
-package com.tube.driver
+package com.tube.driver.util
 
 import android.util.Log
+import com.tube.driver.BuildConfig
 
 object DLog {
     private data class LogInfo(val lineNumber: Int, val className: String, val methodName: String)

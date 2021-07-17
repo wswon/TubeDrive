@@ -7,7 +7,6 @@ sealed interface PlaceItem {
     data class Item(
         val id: String,
         val name: String,
-        val distance: String,
         val placeUrl: String,
         val phoneNumber: String,
         val addressName: String,

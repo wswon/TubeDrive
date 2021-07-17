@@ -34,34 +34,14 @@
         tools:text="통증클리닉" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/name"
-        app:layout_constraintTop_toBottomOf="@id/name"
-        tools:text="194m" />
-
-    <View
-        android:layout_width="1dp"
-        android:layout_height="10dp"
-        android:background="@color/ff7c7c7c"
-        app:layout_constraintBottom_toBottomOf="@id/distance"
-        app:layout_constraintEnd_toStartOf="@id/address"
-        app:layout_constraintStart_toEndOf="@id/distance"
-        app:layout_constraintTop_toTopOf="@id/distance" />
-
-    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:textColor="@color/black"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@id/name"
+        app:layout_constraintTop_toBottomOf="@id/name"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@id/distance"
-        app:layout_constraintTop_toTopOf="@id/distance"
         tools:text="서울 동작구 동자대로 21 양지빌딩 5층" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -73,7 +53,7 @@
         android:layout_marginBottom="10dp"
         android:textColor="@color/keyColor"
         app:layout_constraintStart_toStartOf="@id/name"
-        app:layout_constraintTop_toBottomOf="@id/distance"
+        app:layout_constraintTop_toBottomOf="@id/address"
         tools:text="02-1234-5678" />
 
     <View

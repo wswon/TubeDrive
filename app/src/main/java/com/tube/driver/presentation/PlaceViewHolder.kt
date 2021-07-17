@@ -22,7 +22,6 @@ sealed class PlaceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
                 name.text = placeItem.name
                 subCategory.text = if (placeItem.subCategory.isNotEmpty()) placeItem.subCategory else placeItem.category
-                distance.text = placeItem.distance
                 address.text = placeItem.addressName
                 phoneNumber.text = placeItem.phoneNumber
             }

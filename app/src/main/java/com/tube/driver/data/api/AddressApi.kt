@@ -17,6 +17,7 @@ interface AddressApi {
         @Query("rect") rect: String,
         @Query("page") @IntRange(from = 1, to = 45) page: Int,
         @Query("sort") sort: String = "distance",
+        @Query("size") size: Int = 10,
         @Header("Authorization") authorization: String = "KakaoAK 44334e64fbcc5c81e8eb7104a666e00b",
     ): Single<PlaceResultResponse>
 }

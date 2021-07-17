@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tube.driver.databinding.ItemLoadMoreBinding
 import com.tube.driver.databinding.ItemPlaceBinding
 
 sealed class PlaceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -26,19 +25,6 @@ sealed class PlaceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 distance.text = placeItem.distance
                 address.text = placeItem.addressName
                 phoneNumber.text = placeItem.phoneNumber
-            }
-        }
-    }
-
-    class LoadMore(
-        parent: ViewGroup,
-        private val clickLoadMore: () -> Unit,
-        binding: ItemLoadMoreBinding =
-            ItemLoadMoreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    ) : PlaceViewHolder(binding.root) {
-        init {
-            binding.root.setOnClickListener {
-                clickLoadMore()
             }
         }
     }

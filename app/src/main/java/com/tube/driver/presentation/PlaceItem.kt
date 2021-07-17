@@ -14,6 +14,4 @@ sealed interface PlaceItem {
         val subCategory: String,
         val latLng: LatLng
     ) : PlaceItem
-
-    object LoadMoreFooter : PlaceItem
 }

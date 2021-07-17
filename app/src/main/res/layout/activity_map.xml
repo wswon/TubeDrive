@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="250dp"
+        app:behavior_peekHeight="270dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
         <com.tube.driver.presentation.CategoryButtonListLayout
@@ -58,44 +58,38 @@
             android:gravity="end"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             style="@style/Widget.MaterialComponents.BottomSheet"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="wrap_content"
             android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/category_layout">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/place_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="@string/place_title"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/place_list_view"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="500dp"
                 android:background="@color/white"
                 android:overScrollMode="never"
-                android:paddingBottom="16dp"
+                android:paddingBottom="@dimen/load_more_button_height"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/place_title" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/selected_place_view"
+                layout="@layout/view_selected_place"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/bottom_sheet_state"
@@ -112,5 +106,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/load_more_button"
+        layout="@layout/view_load_more"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/load_more_button_height"
+        android:layout_gravity="bottom" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

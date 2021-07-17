@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.ConcatAdapter
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tube.driver.databinding.ActivityMapBinding
 import com.tube.driver.domain.entity.LatLng
@@ -28,14 +28,6 @@ class MapActivity : AppCompatActivity() {
         PlaceAdapter(
             clickPlaceItem = {
 
-            }
-        )
-    }
-
-    private val placeLoadMoreAdapter: PlaceLoadMoreAdapter by lazy {
-        PlaceLoadMoreAdapter(
-            clickLoadMore = {
-                viewModel.loadMore()
             }
         )
     }
@@ -70,7 +62,7 @@ class MapActivity : AppCompatActivity() {
 
     private fun setupView() {
         with(binding) {
-            placeListView.adapter = ConcatAdapter(placeAdapter, placeLoadMoreAdapter)
+            placeListView.adapter = placeAdapter
 
             refreshButton.setOnClickListener {
                 val mapPoints = mapMarkerManager.getCurrentMapPoints()
@@ -96,24 +88,16 @@ class MapActivity : AppCompatActivity() {
             })
 
             hasNextPage.observe(this@MapActivity, { hasNextPage ->
-                setLoadMoreButtonVisibility(hasNextPage)
-            })
-        }
-    }
 
-    private fun setLoadMoreButtonVisibility(enabled: Boolean) {
-        if (enabled){
-            if (placeLoadMoreAdapter.currentList.isEmpty()) {
-                placeLoadMoreAdapter.submitList(Collections.singletonList(PlaceItem.LoadMoreFooter))
-            }
-        } else {
-            placeLoadMoreAdapter.submitList(emptyList())
+            })
         }
     }
 
     private fun createBottomSheetCallback(text: TextView): BottomSheetBehavior.BottomSheetCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                binding.selectedPlaceView.root.isVisible = newState == BottomSheetBehavior.STATE_COLLAPSED
 
                 text.text = when (newState) {
                     BottomSheetBehavior.STATE_DRAGGING -> "STATE DRAGGING"

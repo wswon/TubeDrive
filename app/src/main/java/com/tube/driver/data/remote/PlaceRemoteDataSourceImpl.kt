@@ -15,9 +15,9 @@ class PlaceRemoteDataSourceImpl @Inject constructor(
     ): Single<PlaceResultResponse> {
         return addressApi.getAddressByCategory(
             getPlaceListRequest.categoryCode,
-            getPlaceListRequest.latLng.latitude.toString(),
-            getPlaceListRequest.latLng.longitude.toString(),
-            radius = 5000,
+            latitude = getPlaceListRequest.currentLatLng.latitude.toString(),
+            longitude = getPlaceListRequest.currentLatLng.longitude.toString(),
+            rect = getPlaceListRequest.getRectRequest(),
             page = getPlaceListRequest.page
         )
     }

@@ -19,10 +19,10 @@ class PlaceLoadMoreAdapter(
     companion object {
         val diffCallback = object : DiffUtil.ItemCallback<PlaceItem.LoadMoreFooter>() {
             override fun areItemsTheSame(oldItem: PlaceItem.LoadMoreFooter, newItem: PlaceItem.LoadMoreFooter): Boolean =
-                true
+                false
 
             override fun areContentsTheSame(oldItem: PlaceItem.LoadMoreFooter, newItem: PlaceItem.LoadMoreFooter): Boolean =
-                true
+                false
         }
     }
 }

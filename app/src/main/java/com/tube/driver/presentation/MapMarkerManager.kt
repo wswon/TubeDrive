@@ -7,6 +7,8 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.tube.driver.R
 import com.tube.driver.domain.entity.LatLng
+import com.tube.driver.domain.entity.MapPoints
+import com.tube.driver.presentation.mapper.toLatLng
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPOIItem.ImageOffset
 import net.daum.mf.map.api.MapPoint
@@ -19,6 +21,7 @@ class MapMarkerManager(
 
     interface EventListener {
         fun onFirstCurrentLocation(latLng: LatLng)
+        fun onCurrentLatLngUpdate(currentLatLng: LatLng)
     }
 
     private var eventListener: EventListener? = null
@@ -29,6 +32,29 @@ class MapMarkerManager(
 
     private val isAtLeast: Boolean
         get() = lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.INITIALIZED)
+
+    private val mapEventProvider by lazy {
+        MapEventProvider(
+            object : MapEventProvider.MapEventListener {
+                override fun onMapViewInitialized(mapView: MapView) {
+                    setUseCustomMarker()
+                }
+
+                override fun onFirstCurrentLocation(mapPoint: MapPoint) {
+                    mapView.setMapCenterPoint(mapPoint, false)
+                    eventListener?.onFirstCurrentLocation(mapPoint.mapPointGeoCoord.toLatLng())
+                }
+
+                override fun onCurrentLocationUpdate(currentLocationPoint: MapPoint) {
+                    eventListener?.onCurrentLatLngUpdate(currentLocationPoint.mapPointGeoCoord.toLatLng())
+                }
+
+                override fun onMarkerSelected(selectedPoint: MapPoint) {
+                    mapView.setMapCenterPoint(selectedPoint, true)
+                }
+            }
+        )
+    }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun created() {
@@ -43,30 +69,6 @@ class MapMarkerManager(
         mapView.setShowCurrentLocationMarker(false)
 
         lifecycleOwner.lifecycle.removeObserver(this)
-    }
-
-    private val mapEventProvider by lazy {
-        MapEventProvider(
-            object : MapEventProvider.MapEventListener {
-                override fun onMapViewInitialized(mapView: MapView) {
-                    setUseCustomMarker()
-                }
-
-                override fun onFirstCurrentLocation(mapPoint: MapPoint) {
-                    mapView.setMapCenterPoint(mapPoint, false)
-                    val latLng =
-                        LatLng(
-                            mapPoint.mapPointGeoCoord.latitude,
-                            mapPoint.mapPointGeoCoord.longitude
-                        )
-                    eventListener?.onFirstCurrentLocation(latLng)
-                }
-
-                override fun onMarkerSelected(selectedPoint: MapPoint) {
-                    mapView.setMapCenterPoint(selectedPoint, true)
-                }
-            }
-        )
     }
 
     private fun connectMapEventListener() {
@@ -111,12 +113,16 @@ class MapMarkerManager(
         mapView.addPOIItem(marker)
     }
 
-    fun getCenterPoint(): LatLng {
-        val mapPointGeoCoord = mapView.mapCenterPoint.mapPointGeoCoord
-        return LatLng(mapPointGeoCoord.latitude, mapPointGeoCoord.longitude)
+    fun getCurrentMapPoints(): MapPoints {
+        return MapPoints(
+            mapView.mapPointBounds.bottomLeft.mapPointGeoCoord.toLatLng(),
+            mapView.mapPointBounds.topRight.mapPointGeoCoord.toLatLng()
+        )
     }
 
     fun clearAllMarker() {
         mapView.removeAllPOIItems()
     }
+
+
 }

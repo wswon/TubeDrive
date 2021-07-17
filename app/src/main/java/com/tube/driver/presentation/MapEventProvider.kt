@@ -16,6 +16,7 @@ class MapEventProvider(
         fun onMapViewInitialized(mapView: MapView)
         fun onFirstCurrentLocation(mapPoint: MapPoint)
         fun onMarkerSelected(selectedPoint: MapPoint)
+        fun onCurrentLocationUpdate(currentLocationPoint: MapPoint)
     }
 
     private var firstLocation = false
@@ -53,6 +54,8 @@ class MapEventProvider(
                 mapEventListener.onFirstCurrentLocation(currentLocation)
             }
 
+            mapEventListener.onCurrentLocationUpdate(currentLocation)
+
             logCurrentLocation(mapPointGeo, accuracyInMeters)
         }
     }
@@ -76,9 +79,15 @@ class MapEventProvider(
         mapView: MapView?,
         mapItem: MapPOIItem?,
         p2: MapPOIItem.CalloutBalloonButtonType?
-    ) {}
+    ) {
+    }
 
-    override fun onDraggablePOIItemMoved(mapView: MapView?, mapItem: MapPOIItem?, mapPoint: MapPoint?) {}
+    override fun onDraggablePOIItemMoved(
+        mapView: MapView?,
+        mapItem: MapPOIItem?,
+        mapPoint: MapPoint?
+    ) {
+    }
 
     private fun logCurrentLocation(
         mapPointGeo: MapPoint.GeoCoordinate,

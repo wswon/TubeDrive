@@ -54,7 +54,13 @@ class MapActivity : AppCompatActivity() {
         mapMarkerManager = MapMarkerManager(this, mapView).apply {
             setEventListener(object : MapMarkerManager.EventListener {
                 override fun onFirstCurrentLocation(latLng: LatLng) {
-                    viewModel.search(latLng)
+                    mapView.postDelayed({
+                        viewModel.search(mapMarkerManager.getCurrentMapPoints())
+                    }, 50)
+                }
+
+                override fun onCurrentLatLngUpdate(currentLatLng: LatLng) {
+                    viewModel.setCurrentLatLng(currentLatLng)
                 }
             })
         }
@@ -67,8 +73,8 @@ class MapActivity : AppCompatActivity() {
             placeListView.adapter = ConcatAdapter(placeAdapter, placeLoadMoreAdapter)
 
             refreshButton.setOnClickListener {
-                val centerLatLng = mapMarkerManager.getCenterPoint()
-                viewModel.search(centerLatLng)
+                val mapPoints = mapMarkerManager.getCurrentMapPoints()
+                viewModel.search(mapPoints)
                 mapMarkerManager.clearAllMarker()
             }
 
@@ -96,7 +102,13 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun setLoadMoreButtonVisibility(enabled: Boolean) {
-        placeLoadMoreAdapter.submitList(if (enabled) Collections.singletonList(PlaceItem.LoadMoreFooter) else emptyList())
+        if (enabled){
+            if (placeLoadMoreAdapter.currentList.isEmpty()) {
+                placeLoadMoreAdapter.submitList(Collections.singletonList(PlaceItem.LoadMoreFooter))
+            }
+        } else {
+            placeLoadMoreAdapter.submitList(emptyList())
+        }
     }
 
     private fun createBottomSheetCallback(text: TextView): BottomSheetBehavior.BottomSheetCallback =
@@ -125,8 +137,6 @@ class MapActivity : AppCompatActivity() {
             ) {
             }
         }
-
-
 }
 
 

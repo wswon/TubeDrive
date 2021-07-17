@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.tube.driver.DLog
 import com.tube.driver.domain.GetPlaceListRequest
 import com.tube.driver.domain.entity.LatLng
+import com.tube.driver.domain.entity.MapPoints
 import com.tube.driver.domain.usecase.GetPlaceListByCategory
 import com.tube.driver.presentation.mapper.PlaceMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,36 +32,44 @@ class MapViewModel @Inject constructor(
         get() = _hasNextPage
 
     private var selectedCategoryType: CategoryType = CategoryType.HOSPITAL
-    private var latestLatLng: LatLng? = null
+    private var latestMapPoints: MapPoints? = null
 
 
     private var currentPage: Int = 1
 
-    fun search(latLng: LatLng) {
-        latestLatLng = latLng
+    fun search(mapPoints: MapPoints) {
+        latestMapPoints = mapPoints
 
         clearPlaceList()
 
-        getSearchPlace(latLng, 1)
-            .subscribe({ (placeList, hasNextPage) ->
-                _placeList.value = placeList
-                _hasNextPage.value = hasNextPage
-            }, {
-                DLog.e("$it")
-            })
+        val currentLatLng = currentLatLng
+
+        if (currentLatLng != null) {
+            getSearchPlace(currentLatLng, mapPoints, 1)
+                .subscribe({ (placeList, hasNextPage) ->
+                    _placeList.value = placeList
+                    _hasNextPage.value = hasNextPage
+                }, {
+                    DLog.e("$it")
+                })
+        }
     }
 
     fun loadMore() {
-        if (hasNextPage.value == true) {
-            latestLatLng?.let { latLng ->
-                getSearchPlace(latLng, ++currentPage)
-                    .subscribe({ (placeList, hasNextPage) ->
-                        _placeList.value = _placeList.value.orEmpty() + placeList
-                        _hasNextPage.value = hasNextPage
-                    }, {
-                        DLog.e("$it")
-                    })
-            }
+        val currentLatLng = currentLatLng
+        val mapPoints = latestMapPoints
+        val hasNextPage = hasNextPage.value
+        if (currentLatLng != null
+            && mapPoints != null
+            && hasNextPage == true
+        ) {
+            getSearchPlace(currentLatLng, mapPoints, ++currentPage)
+                .subscribe({ (placeList, hasNextPage) ->
+                    _placeList.value = _placeList.value.orEmpty() + placeList
+                    _hasNextPage.value = hasNextPage
+                }, {
+                    DLog.e("$it")
+                })
         }
     }
 
@@ -68,11 +77,17 @@ class MapViewModel @Inject constructor(
         selectedCategoryType = categoryType
     }
 
-    private fun getSearchPlace(latLng: LatLng, page: Int) =
+    private var currentLatLng: LatLng? = null
+    fun setCurrentLatLng(currentLatLng: LatLng) {
+        this.currentLatLng = currentLatLng
+    }
+
+    private fun getSearchPlace(currentLatLng: LatLng, mapPoints: MapPoints, page: Int) =
         getPlaceListByCategory(
             GetPlaceListRequest(
                 selectedCategoryType.code,
-                latLng,
+                currentLatLng,
+                mapPoints,
                 page
             )
         )

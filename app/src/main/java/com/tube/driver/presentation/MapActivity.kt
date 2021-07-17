@@ -84,6 +84,10 @@ class MapActivity : AppCompatActivity() {
                 viewModel.changeCategory(categoryType)
             }
 
+            binding.loadMoreButton.root.setOnClickListener {
+                viewModel.loadMore()
+            }
+
             selectedPlaceView.callButton.setOnClickListener {
                 PermissionManager.checkCallPhonePermissions(this@MapActivity)
                     .subscribe({
@@ -115,7 +119,7 @@ class MapActivity : AppCompatActivity() {
             })
 
             hasNextPage.observe(this@MapActivity, { hasNextPage ->
-
+                binding.loadMoreButton.loadMoreText.alpha = if (hasNextPage) 1f else 0.3f
             })
 
             selectedPlaceItem.observe(this@MapActivity, { selectedPlaceItem ->

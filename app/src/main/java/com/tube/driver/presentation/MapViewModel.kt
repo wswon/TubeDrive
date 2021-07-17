@@ -9,6 +9,7 @@ import com.tube.driver.domain.entity.MapPoints
 import com.tube.driver.domain.usecase.GetPlaceListByCategory
 import com.tube.driver.presentation.mapper.PlaceMapper
 import com.tube.driver.util.DLog
+import com.tube.driver.util.DistanceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -130,7 +131,13 @@ class MapViewModel @Inject constructor(
         _selectedPlaceItem.value = placeList.value?.first { it.id.toInt() == markerId }
     }
 
-    fun showRefreshButton() {
-        _isRefreshButtonVisible.value = true
+    fun showRefreshButton(centerLatLng: LatLng) {
+        latestMapPoints?.let {
+            val distance = DistanceManager.getDistance(centerLatLng, it.center)
+            DLog.d("$distance")
+            if (distance > 300) {
+                _isRefreshButtonVisible.value = true
+            }
+        }
     }
 }

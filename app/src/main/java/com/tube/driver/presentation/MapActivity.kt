@@ -135,7 +135,7 @@ class MapActivity : AppCompatActivity() {
                 }
 
                 override fun onMapViewDragEnded() {
-                    viewModel.showRefreshButton()
+                    viewModel.showRefreshButton(mapMarkerManager.getCurrentMapPoints().center)
                 }
             })
         }

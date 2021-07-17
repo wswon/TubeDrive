@@ -8,4 +8,5 @@
     <string name="gas_station">주유소</string>
     <string name="call">전화걸기</string>
     <string name="place_detail">장소상세보기</string>
+    <string name="current_location">현재 위치</string>
 </resources>

@@ -11,6 +11,7 @@ import com.tube.driver.domain.entity.MapPoints
 import com.tube.driver.presentation.mapper.toLatLng
 import com.tube.driver.util.DLog
 import com.tube.driver.util.PermissionManager
+import net.daum.mf.map.api.CameraUpdateFactory
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPOIItem.ImageOffset
 import net.daum.mf.map.api.MapPoint
@@ -151,5 +152,9 @@ class MapMarkerManager(
             mapView.selectPOIItem(marker, true)
             mapView.setMapCenterPoint(marker.mapPoint, true)
         }
+    }
+
+    fun moveLatLng(latLng: LatLng) {
+        mapView.moveCamera(CameraUpdateFactory.newMapPoint(MapPoint.mapPointWithGeoCoord(latLng.latitude, latLng.longitude)))
     }
 }

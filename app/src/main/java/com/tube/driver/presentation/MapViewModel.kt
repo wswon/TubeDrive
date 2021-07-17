@@ -143,4 +143,8 @@ class MapViewModel @Inject constructor(
             }
         }
     }
+
+    fun getCurrentLatLng(): LatLng? {
+        return currentLatLng
+    }
 }

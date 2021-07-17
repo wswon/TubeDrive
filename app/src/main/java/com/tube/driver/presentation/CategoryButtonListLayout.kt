@@ -3,13 +3,14 @@ package com.tube.driver.presentation
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.children
 import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tube.driver.R
 import com.tube.driver.databinding.ViewCategoryButtonBinding
 import com.tube.driver.dp
@@ -29,37 +30,40 @@ class CategoryButtonListLayout @JvmOverloads constructor(
     }
 
     private fun addCategoryButton(categoryType: CategoryType, isSelected: Boolean = false) {
-        val categoryButton =
+        val categoryButtonBinding =
             ViewCategoryButtonBinding.inflate(LayoutInflater.from(context), this, false)
-                .root
                 .apply {
-                    id = categoryType.id
-                    backgroundTintList = ContextCompat.getColorStateList(
-                        context,
-                        getSelectedBackgroundColor(isSelected)
-                    )
-                    setImageResource(categoryType.drawableResId)
-                    contentDescription = context.getString(categoryType.descriptionResId)
-                    updateLayoutParams<MarginLayoutParams> {
-                        setMargins(5.dp.toInt())
+
+                    root.run {
+                        id = categoryType.id
+                        contentDescription = context.getString(categoryType.descriptionResId)
+                        updateLayoutParams<MarginLayoutParams> {
+                            setMargins(5.dp.toInt())
+                        }
+
+                        setOnClickListener {
+                            onClickCategoryButton(root)
+                        }
                     }
 
-                    setOnClickListener { clickedButton ->
-                        onClickCategoryButton(clickedButton as FloatingActionButton)
-                    }
+                    image.setImageResource(categoryType.drawableResId)
                 }
 
-        addView(categoryButton)
+        addView(categoryButtonBinding.root)
+
+        if (isSelected) {
+            onClickCategoryButton(categoryButtonBinding.root)
+        }
     }
 
-    private fun onClickCategoryButton(clickedButton: FloatingActionButton) {
+    private fun onClickCategoryButton(clickedButton: CardView) {
         children
             .filter { childView ->
                 childView.id != clickedButton.id
             }
             .forEach { childView ->
                 setCategoryButtonBackground(
-                    childView as FloatingActionButton,
+                    childView as CardView,
                     false
                 )
             }
@@ -72,17 +76,20 @@ class CategoryButtonListLayout @JvmOverloads constructor(
     }
 
     private fun setCategoryButtonBackground(
-        categoryButton: FloatingActionButton,
+        categoryButton: CardView,
         isSelected: Boolean
     ) {
         DrawableCompat.setTintList(
             DrawableCompat.wrap(categoryButton.background),
             ContextCompat.getColorStateList(context, getSelectedBackgroundColor(isSelected))
         )
+
+        categoryButton.findViewById<ImageView>(R.id.image).imageTintList =
+            ContextCompat.getColorStateList(context, getSelectedBackgroundColor(!isSelected))
     }
 
     private fun getSelectedBackgroundColor(isSelected: Boolean): Int {
-        return if (isSelected) R.color.ff1ea1f3 else R.color.white
+        return if (isSelected) R.color.keyColor else R.color.white
     }
 
     fun setChangeCategoryListener(changeCategory: (CategoryType) -> Unit) {

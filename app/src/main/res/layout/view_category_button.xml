@@ -1,11 +1,19 @@
-<com.google.android.material.floatingactionbutton.FloatingActionButton
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
     app:borderWidth="0dp"
-    app:maxImageSize="32dp"
-    tools:backgroundTint="@color/white"
-    tools:ignore="ContentDescription"
-    tools:src="@drawable/ic_gas_station_32" />
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="360dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:tint="@color/keyColor"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/ic_gas_station_32" />
+</androidx.cardview.widget.CardView>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:layout_marginTop="20dp"
-    android:background="?android:selectableItemBackground"
+    app:rippleColor="@color/ff7c7c7c"
     app:cardBackgroundColor="@color/white"
     app:cardElevation="30dp"
     tools:background="@color/white">
@@ -20,4 +20,4 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

@@ -1,4 +1,4 @@
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,7 +6,8 @@
     android:layout_height="40dp"
     app:borderWidth="0dp"
     app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="360dp">
+    app:cardCornerRadius="20dp"
+    app:rippleColor="@color/fff5f7fb">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image"
@@ -16,4 +17,4 @@
         android:tint="@color/keyColor"
         tools:ignore="ContentDescription"
         tools:src="@drawable/ic_gas_station_32" />
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

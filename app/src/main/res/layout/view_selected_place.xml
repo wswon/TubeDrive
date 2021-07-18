@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="120dp"
     android:background="@color/white"
     tools:background="@color/white">
 
@@ -53,7 +53,6 @@
         android:src="@drawable/ic_call_24"
         android:tint="@color/keyColor"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/name"
         app:layout_constraintTop_toBottomOf="@id/address"
         tools:visibility="visible" />
@@ -67,7 +66,6 @@
         android:src="@drawable/ic_web_24"
         android:tint="@color/keyColor"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/call_button"
         app:layout_constraintTop_toBottomOf="@id/address"
         tools:visibility="visible" />

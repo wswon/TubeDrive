@@ -129,6 +129,8 @@ class MapMarkerManager(
     }
 
     fun addMarker(markerItem: PlaceItem.Item) {
+        if (containsMarker(markerItem)) return
+
         val marker = MapPOIItem().apply {
             itemName = markerItem.name
             tag = markerItem.id.toInt()
@@ -153,6 +155,10 @@ class MapMarkerManager(
         if (markerItem.isSelected) {
             mapView.selectPOIItem(marker, true)
         }
+    }
+
+    private fun containsMarker(markerItem: PlaceItem.Item): Boolean {
+        return mapView.poiItems.any { it.tag == markerItem.id.toInt() }
     }
 
     fun getCurrentMapPoints(): MapPoints {

@@ -149,7 +149,7 @@ class MapViewModel @Inject constructor(
     fun showRefreshButton(centerLatLng: LatLng) {
         latestMapPoints?.let {
             val distance = DistanceManager.getDistance(centerLatLng, it.center)
-            DLog.d("$distance")
+
             if (distance > 300) {
                 _isRefreshButtonVisible.value = true
             }

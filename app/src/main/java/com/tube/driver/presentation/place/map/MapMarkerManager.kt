@@ -33,12 +33,8 @@ class MapMarkerManager(
 
     private var eventListener: EventListener? = null
 
-    fun setEventListener(eventListener: EventListener) {
-        this.eventListener = eventListener
-    }
-
-    private val isAtLeast: Boolean
-        get() = lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.INITIALIZED)
+    private var latestCollapsedLatLng: LatLng? = null
+    private var latestCollapsedZoomLevel: Int? = null
 
     private val mapEventProvider by lazy {
         MapEventProvider(
@@ -96,6 +92,10 @@ class MapMarkerManager(
         mapView.setShowCurrentLocationMarker(false)
 
         lifecycleOwner.lifecycle.removeObserver(this)
+    }
+
+    fun setEventListener(eventListener: EventListener) {
+        this.eventListener = eventListener
     }
 
     private fun isTrackingModeEnabled() =
@@ -175,41 +175,64 @@ class MapMarkerManager(
         mapView.removeAllPOIItems()
     }
 
-    fun setSelectedMarkerById(id: Int, isExpanded: Boolean = false) {
+    fun setFocusSelectedMarkerById(id: Int) {
         val marker = mapView.poiItems.find { it.tag == id }
         if (marker != null) {
             mapView.selectPOIItem(marker, true)
-            setCenterPoint(marker.mapPoint.mapPointGeoCoord.toLatLng(), isExpanded)
+            setCenterPoint(marker.mapPoint.mapPointGeoCoord.toLatLng())
         }
     }
 
-    private fun setCenterPoint(latLng: LatLng, isExpanded: Boolean) {
-        if (isExpanded) {
-            mapView.setMapCenterPoint(
-                MapPoint.mapPointWithGeoCoord(
-                    latLng.latitude,
-                    latLng.longitude
-                ),
-                false
-            )
-            mapView.setZoomLevel(1, false)
+    private fun setCenterPoint(latLng: LatLng) {
+        mapView.setMapCenterPoint(
+            MapPoint.mapPointWithGeoCoord(latLng.latitude, latLng.longitude),
+            true
+        )
+    }
 
-            mapView.postDelayed({
-                val midLatLng = DistanceManager.midPoint(
-                    latLng,
-                    LatLng(
-                        getCurrentMapPoints().leftBottom.latitude,
-                        latLng.longitude,
-                    )
-                )
-                mapView.setMapCenterPoint(
-                    MapPoint.mapPointWithGeoCoord(midLatLng.latitude, midLatLng.longitude),
-                    true
-                )
-            }, 50)
-        } else {
-            mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latLng.latitude, latLng.longitude), true)
-        }
+    fun setExpanded(latLng: LatLng) {
+        latestCollapsedLatLng = latLng
+        latestCollapsedZoomLevel = mapView.zoomLevel
+
+        mapView.setMapCenterPoint(
+            MapPoint.mapPointWithGeoCoord(
+                latLng.latitude,
+                latLng.longitude
+            ),
+            false
+        )
+        mapView.setZoomLevel(1, false)
+        mapView.postDelayed({
+            setExpandedCenterPoint(latLng)
+        }, 50)
+    }
+
+    fun setCollapsed() {
+        val latLng = latestCollapsedLatLng ?: return
+        val zoomLevel = latestCollapsedZoomLevel ?: return
+        mapView.setMapCenterPoint(
+            MapPoint.mapPointWithGeoCoord(
+                latLng.latitude,
+                latLng.longitude
+            ),
+            true
+        )
+        mapView.setZoomLevel(zoomLevel, true)
+    }
+
+    private fun setExpandedCenterPoint(latLng: LatLng) {
+
+        val midLatLng = DistanceManager.midPoint(
+            latLng,
+            LatLng(
+                getCurrentMapPoints().leftBottom.latitude,
+                latLng.longitude,
+            )
+        )
+        mapView.setMapCenterPoint(
+            MapPoint.mapPointWithGeoCoord(midLatLng.latitude, midLatLng.longitude),
+            true
+        )
     }
 
     fun moveLatLng(latLng: LatLng) {

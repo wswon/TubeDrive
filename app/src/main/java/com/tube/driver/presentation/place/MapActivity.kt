@@ -25,7 +25,6 @@ import java.util.*
 
 @AndroidEntryPoint
 class MapActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMapBinding
     private val viewModel by viewModels<MapViewModel>()
 
@@ -36,11 +35,13 @@ class MapActivity : AppCompatActivity() {
     private val placeAdapter: PlaceAdapter by lazy {
         PlaceAdapter(
             clickPlaceItem = { item ->
-                mapMarkerManager.setSelectedMarkerById(item.id.toInt())
+                mapMarkerManager.setFocusSelectedMarkerById(item.id.toInt())
                 viewModel.setSelectedMarkerId(item.id.toInt())
             }
         )
     }
+
+    private var latestBottomSheetState: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ViewUtil.setStatusBarTransparent(this)
@@ -95,7 +96,7 @@ class MapActivity : AppCompatActivity() {
 
             selectedPlaceView.root.setOnClickListener {
                 val selectedPlaceId = viewModel.getSelectedPlaceId()
-                mapMarkerManager.setSelectedMarkerById(selectedPlaceId.toInt())
+                mapMarkerManager.setFocusSelectedMarkerById(selectedPlaceId.toInt())
             }
 
             selectedPlaceView.callButton.setOnClickListener {
@@ -111,7 +112,8 @@ class MapActivity : AppCompatActivity() {
 
             mapViewContainer.setOnTouchListener { _, event ->
                 if (isExpandedBottomSheet()
-                    && event.action == MotionEvent.ACTION_UP) {
+                    && event.action == MotionEvent.ACTION_UP
+                ) {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
                 isExpandedBottomSheet()
@@ -166,7 +168,7 @@ class MapActivity : AppCompatActivity() {
                 }
 
                 override fun onSelectedMarker(markerId: Int) {
-                    mapMarkerManager.setSelectedMarkerById(markerId)
+                    mapMarkerManager.setFocusSelectedMarkerById(markerId)
                     viewModel.setSelectedMarkerId(markerId)
                 }
 
@@ -208,8 +210,6 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
-    private var latestBottomSheetState: Int = -1
-
     private fun isExpandedBottomSheet() =
         latestBottomSheetState == BottomSheetBehavior.STATE_EXPANDED
 
@@ -221,10 +221,12 @@ class MapActivity : AppCompatActivity() {
                 binding.selectedPlaceView.root.isVisible =
                     newState == BottomSheetBehavior.STATE_COLLAPSED
                 if (isExpandedBottomSheet()) {
-                    mapMarkerManager.setSelectedMarkerById(
-                        viewModel.getSelectedPlaceId().toInt(),
-                        true
-                    )
+                    val selectedItem = viewModel.selectedPlaceItem.value
+                    if (selectedItem != null) {
+                        mapMarkerManager.setExpanded(selectedItem.latLng)
+                    }
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mapMarkerManager.setCollapsed()
                 }
             }
 

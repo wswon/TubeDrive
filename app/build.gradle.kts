@@ -68,7 +68,6 @@ dependencies {
 
     implementation(Deps.Android.material)
 
-    implementation(Deps.glide)
     implementation(Deps.Rx.rxAndroid)
     implementation(Deps.Rx.rxJava)
 

@@ -32,7 +32,6 @@ object Deps {
     }
 
     const val permission = "io.github.ParkSangGwon:tedpermission:${Versions.tedPermissionVersion}"
-    const val glide = "com.github.bumptech.glide:glide:${Versions.glideVersion}"
 
     object Test {
         const val archCore = "androidx.arch.core:core-testing:${Versions.Test.coreTestingVersion}"

@@ -22,7 +22,6 @@ object Versions {
     const val coreVersion = "1.3.2"
     const val recyclerViewVersion = "1.2.1"
     const val browserVersion = "1.2.0"
-    const val glideVersion = "4.10.0"
 
     const val rxAndroidVersion = "3.0.0"
 

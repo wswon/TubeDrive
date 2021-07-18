@@ -11,6 +11,7 @@ import com.tube.driver.presentation.place.adapter.PlaceItem
 import com.tube.driver.presentation.place.mapper.PlaceMapper
 import com.tube.driver.util.DLog
 import com.tube.driver.util.DistanceManager
+import com.tube.driver.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -41,6 +42,10 @@ class MapViewModel @Inject constructor(
     val isRefreshButtonVisible: LiveData<Boolean>
         get() = _isRefreshButtonVisible
 
+    private val _emptyResultEvent = MutableLiveData<Event<Unit>>()
+    val emptyResultEvent: LiveData<Event<Unit>>
+        get() = _emptyResultEvent
+
     private var selectedCategoryType: CategoryType = CategoryType.HOSPITAL
 
     private var latestMapPoints: MapPoints? = null
@@ -56,9 +61,10 @@ class MapViewModel @Inject constructor(
         getSearchPlace(mapPoints, 1)
             .subscribe({ (placeList, hasNextPage) ->
                 if (placeList.isNotEmpty()) {
-                    placeList[0].isSelected = true
-                    _selectedPlaceItem.value = placeList[0]
+                    setSelectedItem(placeList.first())
                     _placeList.value = placeList
+                } else {
+                    _emptyResultEvent.value = Event(Unit)
                 }
 
                 _hasNextPage.value = hasNextPage
@@ -85,8 +91,6 @@ class MapViewModel @Inject constructor(
 
     fun changeCategory(categoryType: CategoryType) {
         if (categoryType != selectedCategoryType) {
-            _isRefreshButtonVisible.value = true
-            _hasNextPage.value = false
             selectedCategoryType = categoryType
         }
     }
@@ -104,6 +108,11 @@ class MapViewModel @Inject constructor(
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+
+    private fun setSelectedItem(placeItem: PlaceItem.Item) {
+        placeItem.isSelected = true
+        _selectedPlaceItem.value = placeItem
+    }
 
     private fun clearPlaceList() {
         _placeList.value = emptyList()
@@ -127,7 +136,10 @@ class MapViewModel @Inject constructor(
     }
 
     fun setSelectedMarkerId(markerId: Int) {
-        _selectedPlaceItem.value = placeList.value?.first { it.id.toInt() == markerId }
+        val placeItem = placeList.value?.find { it.id.toInt() == markerId }
+        if (placeItem != null) {
+            setSelectedItem(placeItem)
+        }
     }
 
     fun showRefreshButton(centerLatLng: LatLng) {

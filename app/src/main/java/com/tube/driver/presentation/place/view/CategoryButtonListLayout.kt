@@ -13,8 +13,8 @@ import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
 import com.tube.driver.R
 import com.tube.driver.databinding.ViewCategoryButtonBinding
-import com.tube.driver.dp
 import com.tube.driver.presentation.place.CategoryType
+import com.tube.driver.util.dp
 
 class CategoryButtonListLayout @JvmOverloads constructor(
     context: Context,

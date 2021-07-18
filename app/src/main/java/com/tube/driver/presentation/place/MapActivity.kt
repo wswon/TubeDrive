@@ -5,20 +5,19 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.tube.driver.R
 import com.tube.driver.databinding.ActivityMapBinding
 import com.tube.driver.domain.model.entity.LatLng
 import com.tube.driver.presentation.place.adapter.PlaceAdapter
 import com.tube.driver.presentation.place.adapter.PlaceItem
 import com.tube.driver.presentation.place.map.MapMarkerManager
-import com.tube.driver.util.AnimationUtil
-import com.tube.driver.util.DLog
-import com.tube.driver.util.PermissionManager
-import com.tube.driver.util.ViewUtil
+import com.tube.driver.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -63,13 +62,14 @@ class MapActivity : AppCompatActivity() {
 
             categoryLayout.setChangeCategoryListener { categoryType ->
                 viewModel.changeCategory(categoryType)
+                viewModel.searchPlaceByMapPoints(mapMarkerManager.getCurrentMapPoints())
+                mapMarkerManager.clearAllMarker()
             }
 
             refreshButton.setOnClickListener {
                 AnimationUtil.fadeOut(it)
 
-                val mapPoints = mapMarkerManager.getCurrentMapPoints()
-                viewModel.searchPlaceByMapPoints(mapPoints)
+                viewModel.searchPlaceByMapPoints(mapMarkerManager.getCurrentMapPoints())
                 mapMarkerManager.clearAllMarker()
             }
 
@@ -116,6 +116,10 @@ class MapActivity : AppCompatActivity() {
                 placeList.forEach(mapMarkerManager::addMarker)
 
                 bottomSheetBehavior.isDraggable = placeList.isNotEmpty()
+            })
+
+            emptyResultEvent.observe(this@MapActivity, EventObserver {
+                Toast.makeText(this@MapActivity, R.string.empty_result_message, Toast.LENGTH_SHORT).show()
             })
 
             hasNextPage.observe(this@MapActivity, { hasNextPage ->

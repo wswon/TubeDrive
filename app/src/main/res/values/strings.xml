@@ -9,4 +9,8 @@
     <string name="call">전화걸기</string>
     <string name="place_detail">장소상세보기</string>
     <string name="current_location">현재 위치</string>
+
+    <string name="permission_denied_message_call">사용 권한을 거부할 경우 전화걸기 기능을 사용할 수 없어요.\n[Setting](설정) > [Permission]에서 권한을 켜주세요.</string>
+    <string name="permission_denied_message_location">위치권한 거부할 경우 현 위치 기반 검색 기능을 사용할 수 없어요.\n[Setting](설정) > [Permission]에서 권한을 켜주세요.</string>
+    <string name="empty_result_message">새롭게 검색된 결과가 없습니다.</string>
 </resources>

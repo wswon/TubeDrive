@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TubeDriver"
         android:usesCleartextTraffic="true">
-        <activity android:name=".presentation.MapActivity">
+        <activity android:name=".presentation.place.MapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

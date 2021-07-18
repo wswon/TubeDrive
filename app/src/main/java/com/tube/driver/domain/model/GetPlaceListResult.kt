@@ -1,6 +1,6 @@
-package com.tube.driver.domain
+package com.tube.driver.domain.model
 
-import com.tube.driver.domain.entity.Place
+import com.tube.driver.domain.model.entity.Place
 
 data class GetPlaceListResult(
     val placeList: List<Place>,

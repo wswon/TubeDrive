@@ -1,4 +1,4 @@
-package com.tube.driver.presentation
+package com.tube.driver.presentation.place.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil

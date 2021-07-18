@@ -1,4 +1,4 @@
-package com.tube.driver.presentation
+package com.tube.driver.presentation.place.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,6 +14,7 @@ import androidx.core.view.updateLayoutParams
 import com.tube.driver.R
 import com.tube.driver.databinding.ViewCategoryButtonBinding
 import com.tube.driver.dp
+import com.tube.driver.presentation.place.CategoryType
 
 class CategoryButtonListLayout @JvmOverloads constructor(
     context: Context,

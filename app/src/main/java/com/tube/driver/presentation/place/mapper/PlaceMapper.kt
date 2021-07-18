@@ -1,7 +1,7 @@
-package com.tube.driver.presentation.mapper
+package com.tube.driver.presentation.place.mapper
 
-import com.tube.driver.domain.entity.Place
-import com.tube.driver.presentation.PlaceItem
+import com.tube.driver.domain.model.entity.Place
+import com.tube.driver.presentation.place.adapter.PlaceItem
 
 class PlaceMapper {
 

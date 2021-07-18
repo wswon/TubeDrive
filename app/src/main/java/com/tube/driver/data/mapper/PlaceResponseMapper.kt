@@ -1,9 +1,9 @@
 package com.tube.driver.data.mapper
 
 import com.tube.driver.data.response.PlaceResponse
-import com.tube.driver.domain.entity.Category
-import com.tube.driver.domain.entity.LatLng
-import com.tube.driver.domain.entity.Place
+import com.tube.driver.domain.model.entity.Category
+import com.tube.driver.domain.model.entity.LatLng
+import com.tube.driver.domain.model.entity.Place
 
 class PlaceResponseMapper {
     fun transform(placeResponse: PlaceResponse): Place {

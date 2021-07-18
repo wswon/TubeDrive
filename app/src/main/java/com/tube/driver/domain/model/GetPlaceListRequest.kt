@@ -1,6 +1,6 @@
-package com.tube.driver.domain
+package com.tube.driver.domain.model
 
-import com.tube.driver.domain.entity.MapPoints
+import com.tube.driver.domain.model.entity.MapPoints
 
 data class GetPlaceListRequest(
     val categoryCode: String,

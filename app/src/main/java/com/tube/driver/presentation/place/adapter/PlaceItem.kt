@@ -1,6 +1,6 @@
-package com.tube.driver.presentation
+package com.tube.driver.presentation.place.adapter
 
-import com.tube.driver.domain.entity.LatLng
+import com.tube.driver.domain.model.entity.LatLng
 
 sealed interface PlaceItem {
 

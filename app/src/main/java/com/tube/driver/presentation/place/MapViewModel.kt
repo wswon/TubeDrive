@@ -1,13 +1,14 @@
-package com.tube.driver.presentation
+package com.tube.driver.presentation.place
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.tube.driver.domain.GetPlaceListRequest
-import com.tube.driver.domain.entity.LatLng
-import com.tube.driver.domain.entity.MapPoints
+import com.tube.driver.domain.model.GetPlaceListRequest
+import com.tube.driver.domain.model.entity.LatLng
+import com.tube.driver.domain.model.entity.MapPoints
 import com.tube.driver.domain.usecase.GetPlaceListByCategory
-import com.tube.driver.presentation.mapper.PlaceMapper
+import com.tube.driver.presentation.place.adapter.PlaceItem
+import com.tube.driver.presentation.place.mapper.PlaceMapper
 import com.tube.driver.util.DLog
 import com.tube.driver.util.DistanceManager
 import dagger.hilt.android.lifecycle.HiltViewModel

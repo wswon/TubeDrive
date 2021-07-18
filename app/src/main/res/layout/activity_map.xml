@@ -85,7 +85,7 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.tube.driver.presentation.CategoryButtonListLayout
+            <com.tube.driver.presentation.place.view.CategoryButtonListLayout
                 android:id="@+id/category_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

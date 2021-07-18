@@ -1,4 +1,4 @@
-package com.tube.driver.di
+package com.tube.driver.domain.di
 
 import com.tube.driver.domain.repository.PlaceRepository
 import com.tube.driver.domain.usecase.GetPlaceListByCategory

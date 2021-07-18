@@ -1,4 +1,4 @@
-package com.tube.driver.presentation
+package com.tube.driver.presentation.place.map
 
 import com.tube.driver.util.DLog
 import net.daum.mf.map.api.MapPOIItem

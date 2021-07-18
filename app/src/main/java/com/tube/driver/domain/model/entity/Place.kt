@@ -1,4 +1,4 @@
-package com.tube.driver.domain.entity
+package com.tube.driver.domain.model.entity
 
 class Place(
     val id: String,

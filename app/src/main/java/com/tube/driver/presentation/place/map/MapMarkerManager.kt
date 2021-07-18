@@ -1,4 +1,4 @@
-package com.tube.driver.presentation
+package com.tube.driver.presentation.place.map
 
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
@@ -6,9 +6,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.tube.driver.R
-import com.tube.driver.domain.entity.LatLng
-import com.tube.driver.domain.entity.MapPoints
-import com.tube.driver.presentation.mapper.toLatLng
+import com.tube.driver.domain.model.entity.LatLng
+import com.tube.driver.domain.model.entity.MapPoints
+import com.tube.driver.presentation.place.adapter.PlaceItem
+import com.tube.driver.presentation.place.mapper.toLatLng
 import com.tube.driver.util.DLog
 import com.tube.driver.util.PermissionManager
 import net.daum.mf.map.api.CameraUpdateFactory

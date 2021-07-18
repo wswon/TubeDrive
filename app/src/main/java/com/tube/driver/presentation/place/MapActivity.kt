@@ -1,4 +1,4 @@
-package com.tube.driver.presentation
+package com.tube.driver.presentation.place
 
 import android.content.Intent
 import android.net.Uri
@@ -11,7 +11,10 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tube.driver.databinding.ActivityMapBinding
-import com.tube.driver.domain.entity.LatLng
+import com.tube.driver.domain.model.entity.LatLng
+import com.tube.driver.presentation.place.adapter.PlaceAdapter
+import com.tube.driver.presentation.place.adapter.PlaceItem
+import com.tube.driver.presentation.place.map.MapMarkerManager
 import com.tube.driver.util.AnimationUtil
 import com.tube.driver.util.DLog
 import com.tube.driver.util.PermissionManager

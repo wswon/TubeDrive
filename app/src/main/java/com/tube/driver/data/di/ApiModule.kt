@@ -1,4 +1,4 @@
-package com.tube.driver.di
+package com.tube.driver.data.di
 
 import com.tube.driver.data.api.AddressApi
 import dagger.Module

@@ -1,6 +1,6 @@
 package com.tube.driver.util
 
-import com.tube.driver.domain.entity.LatLng
+import com.tube.driver.domain.model.entity.LatLng
 import kotlin.math.*
 
 object DistanceManager {

@@ -90,9 +90,7 @@ class MapViewModel @Inject constructor(
     }
 
     fun changeCategory(categoryType: CategoryType) {
-        if (categoryType != selectedCategoryType) {
-            selectedCategoryType = categoryType
-        }
+        selectedCategoryType = categoryType
     }
 
     private fun getSearchPlace(mapPoints: MapPoints, page: Int) =
@@ -123,6 +121,7 @@ class MapViewModel @Inject constructor(
         compositeDisposable.clear()
         super.onCleared()
     }
+
     fun getSelectedPlaceId(): String {
         return selectedPlaceItem.value?.id.orEmpty()
     }

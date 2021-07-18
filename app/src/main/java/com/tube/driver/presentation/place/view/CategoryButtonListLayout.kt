@@ -1,6 +1,7 @@
 package com.tube.driver.presentation.place.view
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ImageView
@@ -15,6 +16,7 @@ import com.tube.driver.R
 import com.tube.driver.databinding.ViewCategoryButtonBinding
 import com.tube.driver.presentation.place.CategoryType
 import com.tube.driver.util.dp
+import kotlinx.parcelize.Parcelize
 
 class CategoryButtonListLayout @JvmOverloads constructor(
     context: Context,
@@ -22,33 +24,36 @@ class CategoryButtonListLayout @JvmOverloads constructor(
     defStyle: Int = 0
 ) : LinearLayout(context, attributeSet, defStyle) {
 
+    private var selectedCategory: CategoryType = CategoryType.HOSPITAL
     private var changeCategory: ((CategoryType) -> Unit)? = null
 
     init {
-        addCategoryButton(CategoryType.HOSPITAL, true)
-        addCategoryButton(CategoryType.PHARMACY)
-        addCategoryButton(CategoryType.GAS_STATION)
+        addCategoryButton(CategoryType.HOSPITAL, selectedCategory == CategoryType.HOSPITAL)
+        addCategoryButton(CategoryType.PHARMACY, selectedCategory == CategoryType.PHARMACY)
+        addCategoryButton(CategoryType.GAS_STATION, selectedCategory == CategoryType.GAS_STATION)
     }
+
+    private fun makeCategoryButtonBinding(categoryType: CategoryType): ViewCategoryButtonBinding =
+        ViewCategoryButtonBinding.inflate(LayoutInflater.from(context), this, false)
+            .apply {
+                root.run {
+                    id = categoryType.id
+                    contentDescription = context.getString(categoryType.descriptionResId)
+                    updateLayoutParams<MarginLayoutParams> {
+                        setMargins(5.dp.toInt())
+                    }
+
+                    setOnClickListener {
+                        onClickCategoryButton(root)
+                    }
+                }
+
+                image.setImageResource(categoryType.drawableResId)
+            }
 
     private fun addCategoryButton(categoryType: CategoryType, isSelected: Boolean = false) {
         val categoryButtonBinding =
-            ViewCategoryButtonBinding.inflate(LayoutInflater.from(context), this, false)
-                .apply {
-
-                    root.run {
-                        id = categoryType.id
-                        contentDescription = context.getString(categoryType.descriptionResId)
-                        updateLayoutParams<MarginLayoutParams> {
-                            setMargins(5.dp.toInt())
-                        }
-
-                        setOnClickListener {
-                            onClickCategoryButton(root)
-                        }
-                    }
-
-                    image.setImageResource(categoryType.drawableResId)
-                }
+            makeCategoryButtonBinding(categoryType)
 
         addView(categoryButtonBinding.root)
 
@@ -58,9 +63,21 @@ class CategoryButtonListLayout @JvmOverloads constructor(
     }
 
     private fun onClickCategoryButton(clickedButton: CardView) {
+        toggleSelected(clickedButton)
+        val categoryType = CategoryType.findCategoryType(clickedButton.id)
+        if (categoryType.isSuccess) {
+            val clickedCategory = categoryType.getOrThrow()
+            if (selectedCategory != clickedCategory) {
+                selectedCategory = clickedCategory
+                changeCategory?.invoke(clickedCategory)
+            }
+        }
+    }
+
+    private fun toggleSelected(selectedView: CardView) {
         children
             .filter { childView ->
-                childView.id != clickedButton.id
+                childView.id != selectedView.id
             }
             .forEach { childView ->
                 setCategoryButtonBackground(
@@ -68,12 +85,7 @@ class CategoryButtonListLayout @JvmOverloads constructor(
                     false
                 )
             }
-
-        setCategoryButtonBackground(clickedButton, true)
-        val categoryType = CategoryType.findCategoryType(clickedButton.id)
-        if (categoryType.isSuccess) {
-            changeCategory?.invoke(categoryType.getOrThrow())
-        }
+        setCategoryButtonBackground(selectedView, true)
     }
 
     private fun setCategoryButtonBackground(
@@ -96,4 +108,27 @@ class CategoryButtonListLayout @JvmOverloads constructor(
     fun setChangeCategoryListener(changeCategory: (CategoryType) -> Unit) {
         this.changeCategory = changeCategory
     }
+
+    override fun onSaveInstanceState(): Parcelable {
+        return SavedState(super.onSaveInstanceState(), selectedCategory)
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        val savedState = state as? SavedState
+        savedState?.selectedCategoryType?.let {
+            selectedCategory = it
+        }
+
+        val view = children.find { it.id == selectedCategory.id }
+        if (view is CardView) {
+            toggleSelected(view)
+        }
+        super.onRestoreInstanceState(savedState?.superState)
+    }
+
+    @Parcelize
+    class SavedState(
+        val superState: Parcelable?,
+        var selectedCategoryType: CategoryType
+    ) : Parcelable
 }

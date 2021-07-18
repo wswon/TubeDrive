@@ -6,10 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:layout_marginTop="20dp"
-    app:rippleColor="@color/ff7c7c7c"
     app:cardBackgroundColor="@color/white"
     app:cardElevation="30dp"
+    app:rippleColor="@color/ff7c7c7c"
     tools:background="@color/white">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha=".3"
+        android:background="@color/ff7c7c7c" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/load_more_text"

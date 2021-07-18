@@ -149,6 +149,7 @@ class MapMarkerManager(
                 R.drawable.ic_marker_selected
             )
             showAnimationType = MapPOIItem.ShowAnimationType.SpringFromGround
+            isShowCalloutBalloonOnTouch = false
         }
 
         mapView.addPOIItem(marker)

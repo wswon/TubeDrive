@@ -1,9 +1,11 @@
 package com.tube.driver.presentation.place
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -34,7 +36,7 @@ class MapActivity : AppCompatActivity() {
     private val placeAdapter: PlaceAdapter by lazy {
         PlaceAdapter(
             clickPlaceItem = { item ->
-                mapMarkerManager.setSelectedMarkerById(item.id, isExpandedBottomSheet())
+                mapMarkerManager.setSelectedMarkerById(item.id.toInt())
                 viewModel.setSelectedMarkerId(item.id.toInt())
             }
         )
@@ -51,6 +53,7 @@ class MapActivity : AppCompatActivity() {
         setMarkerManager()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupView() {
         with(binding) {
             placeListView.adapter = placeAdapter
@@ -92,7 +95,7 @@ class MapActivity : AppCompatActivity() {
 
             selectedPlaceView.root.setOnClickListener {
                 val selectedPlaceId = viewModel.getSelectedPlaceId()
-                mapMarkerManager.setSelectedMarkerById(selectedPlaceId, isExpandedBottomSheet())
+                mapMarkerManager.setSelectedMarkerById(selectedPlaceId.toInt())
             }
 
             selectedPlaceView.callButton.setOnClickListener {
@@ -104,6 +107,14 @@ class MapActivity : AppCompatActivity() {
 
             selectedPlaceView.webSiteButton.setOnClickListener {
                 openWebView(viewModel.getSelectedPlaceUrl())
+            }
+
+            mapViewContainer.setOnTouchListener { _, event ->
+                if (isExpandedBottomSheet()
+                    && event.action == MotionEvent.ACTION_UP) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                }
+                isExpandedBottomSheet()
             }
         }
     }
@@ -155,6 +166,7 @@ class MapActivity : AppCompatActivity() {
                 }
 
                 override fun onSelectedMarker(markerId: Int) {
+                    mapMarkerManager.setSelectedMarkerById(markerId)
                     viewModel.setSelectedMarkerId(markerId)
                 }
 
@@ -209,7 +221,10 @@ class MapActivity : AppCompatActivity() {
                 binding.selectedPlaceView.root.isVisible =
                     newState == BottomSheetBehavior.STATE_COLLAPSED
                 if (isExpandedBottomSheet()) {
-                    mapMarkerManager.setSelectedMarkerById(viewModel.getSelectedPlaceId(), true)
+                    mapMarkerManager.setSelectedMarkerById(
+                        viewModel.getSelectedPlaceId().toInt(),
+                        true
+                    )
                 }
             }
 

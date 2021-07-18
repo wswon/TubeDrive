@@ -175,8 +175,8 @@ class MapMarkerManager(
         mapView.removeAllPOIItems()
     }
 
-    fun setSelectedMarkerById(id: String, isExpanded: Boolean) {
-        val marker = mapView.poiItems.find { it.tag == id.toInt() }
+    fun setSelectedMarkerById(id: Int, isExpanded: Boolean = false) {
+        val marker = mapView.poiItems.find { it.tag == id }
         if (marker != null) {
             mapView.selectPOIItem(marker, true)
             setCenterPoint(marker.mapPoint.mapPointGeoCoord.toLatLng(), isExpanded)

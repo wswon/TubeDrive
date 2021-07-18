@@ -17,8 +17,6 @@ class PlaceRepositoryImpl @Inject constructor(
         getPlaceListRequest: GetPlaceListRequest
     ): Single<GetPlaceListResult> {
         return remoteDataSource.getPlaceListByCategory(getPlaceListRequest)
-            .map {
-                GetPlaceListResult(placeResponseMapper.transform(it.placeList), !it.meta.isEnd)
-            }
+            .map(placeResponseMapper::transform)
     }
 }

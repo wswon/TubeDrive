@@ -1,6 +1,8 @@
 package com.tube.driver.data.mapper
 
 import com.tube.driver.data.response.PlaceResponse
+import com.tube.driver.data.response.PlaceResultResponse
+import com.tube.driver.domain.model.GetPlaceListResult
 import com.tube.driver.domain.model.entity.Category
 import com.tube.driver.domain.model.entity.LatLng
 import com.tube.driver.domain.model.entity.Place
@@ -38,5 +40,9 @@ class PlaceResponseMapper {
 
     fun transform(placeResponseList: List<PlaceResponse>): List<Place> {
         return placeResponseList.map(this::transform)
+    }
+
+    fun transform(placeResultResponse: PlaceResultResponse): GetPlaceListResult {
+        return GetPlaceListResult(placeResultResponse.placeList.map(::transform), !placeResultResponse.meta.isEnd)
     }
 }

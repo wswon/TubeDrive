@@ -122,11 +122,6 @@ class MapMarkerManager(
             R.drawable.ic_red_dot,
             ImageOffset(10, 10)
         )
-
-        mapView.setCustomCurrentLocationMarkerDirectionImage(
-            R.drawable.custom_map_present_direction,
-            ImageOffset(15, 15)
-        )
     }
 
     fun addMarker(markerItem: PlaceItem.Item) {

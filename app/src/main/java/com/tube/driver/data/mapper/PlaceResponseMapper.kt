@@ -2,7 +2,7 @@ package com.tube.driver.data.mapper
 
 import com.tube.driver.data.response.PlaceResponse
 import com.tube.driver.data.response.PlaceResultResponse
-import com.tube.driver.domain.model.GetPlaceListResult
+import com.tube.driver.domain.model.dto.GetPlaceListResult
 import com.tube.driver.domain.model.entity.Category
 import com.tube.driver.domain.model.entity.LatLng
 import com.tube.driver.domain.model.entity.Place

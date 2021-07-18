@@ -34,7 +34,7 @@ class MapActivity : AppCompatActivity() {
     private val placeAdapter: PlaceAdapter by lazy {
         PlaceAdapter(
             clickPlaceItem = { item ->
-                mapMarkerManager.setSelectedMarkerById(item.id)
+                mapMarkerManager.setSelectedMarkerById(item.id, isExpandedBottomSheet())
                 viewModel.setSelectedMarkerId(item.id.toInt())
             }
         )
@@ -92,7 +92,7 @@ class MapActivity : AppCompatActivity() {
 
             selectedPlaceView.root.setOnClickListener {
                 val selectedPlaceId = viewModel.getSelectedPlaceId()
-                mapMarkerManager.setSelectedMarkerById(selectedPlaceId)
+                mapMarkerManager.setSelectedMarkerById(selectedPlaceId, isExpandedBottomSheet())
             }
 
             selectedPlaceView.callButton.setOnClickListener {
@@ -119,7 +119,8 @@ class MapActivity : AppCompatActivity() {
             })
 
             emptyResultEvent.observe(this@MapActivity, EventObserver {
-                Toast.makeText(this@MapActivity, R.string.empty_result_message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MapActivity, R.string.empty_result_message, Toast.LENGTH_SHORT)
+                    .show()
             })
 
             hasNextPage.observe(this@MapActivity, { hasNextPage ->
@@ -127,7 +128,6 @@ class MapActivity : AppCompatActivity() {
             })
 
             selectedPlaceItem.observe(this@MapActivity, { selectedPlaceItem ->
-                DLog.d("selectedPlaceItem $selectedPlaceItem")
                 setSelectedPlaceInfo(selectedPlaceItem)
             })
 
@@ -145,7 +145,6 @@ class MapActivity : AppCompatActivity() {
         mapMarkerManager = MapMarkerManager(this, binding.mapViewContainer).apply {
             setEventListener(object : MapMarkerManager.EventListener {
                 override fun onFirstCurrentLocation(latLng: LatLng) {
-                    // 고치기..
                     Handler().postDelayed({
                         viewModel.searchPlaceByMapPoints(mapMarkerManager.getCurrentMapPoints())
                     }, 50)
@@ -197,11 +196,21 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
+    private var latestBottomSheetState: Int = -1
+
+    private fun isExpandedBottomSheet() =
+        latestBottomSheetState == BottomSheetBehavior.STATE_EXPANDED
+
     private fun createBottomSheetCallback(): BottomSheetBehavior.BottomSheetCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                latestBottomSheetState = newState
+
                 binding.selectedPlaceView.root.isVisible =
                     newState == BottomSheetBehavior.STATE_COLLAPSED
+                if (isExpandedBottomSheet()) {
+                    mapMarkerManager.setSelectedMarkerById(viewModel.getSelectedPlaceId(), true)
+                }
             }
 
             override fun onSlide(

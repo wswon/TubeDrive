@@ -30,7 +30,7 @@ class MapEventProvider(
 
     override fun onMapViewCenterPointMoved(mapView: MapView?, mapPoint: MapPoint?) {}
 
-    override fun onMapViewZoomLevelChanged(mapView: MapView?, p1: Int) {}
+    override fun onMapViewZoomLevelChanged(mapView: MapView?, zoomLevel: Int) {}
 
     override fun onMapViewSingleTapped(mapView: MapView?, mapPoint: MapPoint?) {}
 

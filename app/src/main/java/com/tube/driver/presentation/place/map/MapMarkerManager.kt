@@ -11,6 +11,7 @@ import com.tube.driver.domain.model.entity.MapPoints
 import com.tube.driver.presentation.place.adapter.PlaceItem
 import com.tube.driver.presentation.place.mapper.toLatLng
 import com.tube.driver.util.DLog
+import com.tube.driver.util.DistanceManager
 import com.tube.driver.util.PermissionManager
 import net.daum.mf.map.api.CameraUpdateFactory
 import net.daum.mf.map.api.MapPOIItem
@@ -174,11 +175,40 @@ class MapMarkerManager(
         mapView.removeAllPOIItems()
     }
 
-    fun setSelectedMarkerById(id: String) {
+    fun setSelectedMarkerById(id: String, isExpanded: Boolean) {
         val marker = mapView.poiItems.find { it.tag == id.toInt() }
         if (marker != null) {
             mapView.selectPOIItem(marker, true)
-            mapView.setMapCenterPoint(marker.mapPoint, true)
+            setCenterPoint(marker.mapPoint.mapPointGeoCoord.toLatLng(), isExpanded)
+        }
+    }
+
+    private fun setCenterPoint(latLng: LatLng, isExpanded: Boolean) {
+        if (isExpanded) {
+            mapView.setMapCenterPoint(
+                MapPoint.mapPointWithGeoCoord(
+                    latLng.latitude,
+                    latLng.longitude
+                ),
+                false
+            )
+            mapView.setZoomLevel(1, false)
+
+            mapView.postDelayed({
+                val midLatLng = DistanceManager.midPoint(
+                    latLng,
+                    LatLng(
+                        getCurrentMapPoints().leftBottom.latitude,
+                        latLng.longitude,
+                    )
+                )
+                mapView.setMapCenterPoint(
+                    MapPoint.mapPointWithGeoCoord(midLatLng.latitude, midLatLng.longitude),
+                    true
+                )
+            }, 50)
+        } else {
+            mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latLng.latitude, latLng.longitude), true)
         }
     }
 

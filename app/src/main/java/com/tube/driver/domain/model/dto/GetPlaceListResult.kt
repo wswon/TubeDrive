@@ -1,4 +1,4 @@
-package com.tube.driver.domain.model
+package com.tube.driver.domain.model.dto
 
 import com.tube.driver.domain.model.entity.Place
 

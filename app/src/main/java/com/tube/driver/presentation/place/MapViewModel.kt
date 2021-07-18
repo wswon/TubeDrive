@@ -3,7 +3,7 @@ package com.tube.driver.presentation.place
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.tube.driver.domain.model.GetPlaceListRequest
+import com.tube.driver.domain.model.dto.GetPlaceListRequest
 import com.tube.driver.domain.model.entity.LatLng
 import com.tube.driver.domain.model.entity.MapPoints
 import com.tube.driver.domain.usecase.GetPlaceListByCategory

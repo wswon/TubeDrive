@@ -2,8 +2,8 @@ package com.tube.driver.data.repository
 
 import com.tube.driver.data.mapper.PlaceResponseMapper
 import com.tube.driver.data.remote.PlaceRemoteDataSource
-import com.tube.driver.domain.model.GetPlaceListRequest
-import com.tube.driver.domain.model.GetPlaceListResult
+import com.tube.driver.domain.model.dto.GetPlaceListRequest
+import com.tube.driver.domain.model.dto.GetPlaceListResult
 import com.tube.driver.domain.repository.PlaceRepository
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject

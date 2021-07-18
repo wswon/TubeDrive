@@ -135,10 +135,15 @@ class MapViewModel @Inject constructor(
     }
 
     fun setSelectedMarkerId(markerId: Int) {
-        val placeItem = placeList.value?.find { it.id.toInt() == markerId }
+        val copiedList = placeList.value.orEmpty().map { it.copy() }
+        copiedList.forEach { it.isSelected = false }
+
+        val placeItem = copiedList.find { it.id.toInt() == markerId }
         if (placeItem != null) {
             setSelectedItem(placeItem)
         }
+
+        _placeList.value = copiedList
     }
 
     fun showRefreshButton(centerLatLng: LatLng) {

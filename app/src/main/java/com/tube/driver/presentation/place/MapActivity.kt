@@ -127,6 +127,7 @@ class MapActivity : AppCompatActivity() {
             })
 
             selectedPlaceItem.observe(this@MapActivity, { selectedPlaceItem ->
+                DLog.d("selectedPlaceItem $selectedPlaceItem")
                 setSelectedPlaceInfo(selectedPlaceItem)
             })
 

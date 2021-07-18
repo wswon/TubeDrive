@@ -8,9 +8,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tube.driver.databinding.ActivityMapBinding
 import com.tube.driver.domain.entity.LatLng
@@ -68,7 +66,7 @@ class MapActivity : AppCompatActivity() {
                 AnimationUtil.fadeOut(it)
 
                 val mapPoints = mapMarkerManager.getCurrentMapPoints()
-                viewModel.search(mapPoints)
+                viewModel.searchPlaceByMapPoints(mapPoints)
                 mapMarkerManager.clearAllMarker()
             }
 
@@ -80,7 +78,7 @@ class MapActivity : AppCompatActivity() {
                 PermissionManager.checkLocationPermissions(this@MapActivity)
                     .subscribe({
                         mapMarkerManager.enableTrackingMode()
-                        val currentLatLng = viewModel.getCurrentLatLng()
+                        val currentLatLng = viewModel.currentLatLng
                         if (currentLatLng != null) {
                             mapMarkerManager.moveLatLng(currentLatLng)
                         }
@@ -139,13 +137,14 @@ class MapActivity : AppCompatActivity() {
         mapMarkerManager = MapMarkerManager(this, binding.mapViewContainer).apply {
             setEventListener(object : MapMarkerManager.EventListener {
                 override fun onFirstCurrentLocation(latLng: LatLng) {
+                    // 고치기..
                     Handler().postDelayed({
-                        viewModel.search(mapMarkerManager.getCurrentMapPoints())
+                        viewModel.searchPlaceByMapPoints(mapMarkerManager.getCurrentMapPoints())
                     }, 50)
                 }
 
                 override fun onCurrentLatLngUpdate(currentLatLng: LatLng) {
-                    viewModel.setCurrentLatLng(currentLatLng)
+                    viewModel.currentLatLng = currentLatLng
                 }
 
                 override fun onSelectedMarker(markerId: Int) {
@@ -193,21 +192,6 @@ class MapActivity : AppCompatActivity() {
     private fun createBottomSheetCallback(): BottomSheetBehavior.BottomSheetCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-
-                when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        binding.mapViewContainer.updateLayoutParams {
-                            height = binding.bottomSheet.y.toInt() + binding.categoryLayout.height
-                        }
-                        mapMarkerManager.setSelectedMarkerById(viewModel.getSelectedPlaceId())
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        binding.mapViewContainer.updateLayoutParams {
-                            height = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
-                        }
-                    }
-                }
-
                 binding.selectedPlaceView.root.isVisible =
                     newState == BottomSheetBehavior.STATE_COLLAPSED
             }

@@ -24,7 +24,7 @@ enum class CategoryType(
         "PM9",
         R.id.category_pharmacy,
         R.string.pharmacy,
-        R.drawable.ic_pharmacy_32
+        R.drawable.ic_pharmacy_24
     ),
     GAS_STATION(
         "OL7",

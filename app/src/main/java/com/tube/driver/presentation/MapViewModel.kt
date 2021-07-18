@@ -45,8 +45,9 @@ class MapViewModel @Inject constructor(
     private var latestMapPoints: MapPoints? = null
 
     private var currentPage: Int = 1
+    var currentLatLng: LatLng? = null
 
-    fun search(mapPoints: MapPoints) {
+    fun searchPlaceByMapPoints(mapPoints: MapPoints) {
         latestMapPoints = mapPoints
 
         clearPlaceList()
@@ -89,12 +90,6 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private var currentLatLng: LatLng? = null
-
-    fun setCurrentLatLng(currentLatLng: LatLng) {
-        this.currentLatLng = currentLatLng
-    }
-
     private fun getSearchPlace(mapPoints: MapPoints, page: Int) =
         getPlaceListByCategory(
             GetPlaceListRequest(
@@ -118,10 +113,10 @@ class MapViewModel @Inject constructor(
         compositeDisposable.clear()
         super.onCleared()
     }
-
     fun getSelectedPlaceId(): String {
         return selectedPlaceItem.value?.id.orEmpty()
     }
+
     fun getSelectedPlaceUrl(): String {
         return selectedPlaceItem.value?.placeUrl.orEmpty()
     }
@@ -142,9 +137,5 @@ class MapViewModel @Inject constructor(
                 _isRefreshButtonVisible.value = true
             }
         }
-    }
-
-    fun getCurrentLatLng(): LatLng? {
-        return currentLatLng
     }
 }

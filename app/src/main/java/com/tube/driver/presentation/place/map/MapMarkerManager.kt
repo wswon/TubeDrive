@@ -196,7 +196,7 @@ class MapMarkerManager(
 
     fun setExpanded(latLng: LatLng) {
         isExpanded = true
-        latestCollapsedLatLng = latLng
+        latestCollapsedLatLng = mapView.mapCenterPoint.mapPointGeoCoord.toLatLng()
         latestCollapsedZoomLevel = mapView.zoomLevel
 
         setExpandedCenterPoint(latLng)
